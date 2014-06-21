@@ -1,0 +1,15 @@
+#!/usr/bin/ruby
+
+require './lib/reader'
+require './lib/writer'
+require './lib/player'
+require './lib/board'
+require './lib/rules'
+require './lib/game'
+
+player1 = Player.new Reader
+player2 = Player.new Reader
+board = EchoBoard.new
+
+game = Game.new(player1, player2, EchoRules, Writer, board)
+game.start
