@@ -11,11 +11,14 @@ class Piece
   private
 
   def directions_for(type)
+    non_diagonal = [:north, :east, :south, :west]
+    diagonal = [:northeast, :northwest, :southeast, :southwest]
+    all_directions = diagonal + non_diagonal
     {
-      :rook => [:north, :east, :south, :west],
-      :bishop => [:northeast, :northwest, :southeast, :southwest],
-      :queen => [:north, :east, :south, :west, :northeast, :northwest, :southeast, :southwest],
-      :king => [:north, :east, :south, :west, :northeast, :northwest, :southeast, :southwest],
+      :rook => non_diagonal,
+      :bishop => diagonal,
+      :queen => all_directions,
+      :king => all_directions,
       :pawn => pawn_directions,
       :knight => :not_sure_yet
     }[type]

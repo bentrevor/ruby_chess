@@ -1,5 +1,4 @@
-require 'game'
-require 'pry'
+require 'spec_helper'
 
 describe Game do
   let(:first_move) { 1 }
@@ -8,7 +7,7 @@ describe Game do
   let(:player2) { double 'computer player', :get_move => second_move }
   let(:rules)   { double 'game rules', :game_over? => true, :winner => nil, :valid_move? => true }
   let(:writer)  { double 'writer', :show => nil, :show_board => nil }
-  let(:board)   { double 'board', :spaces => 'spaces', :place_move => nil }
+  let(:board)   { double 'board', :spaces => 'spaces', :make_move => nil }
   let(:game)    { Game.new(player1, player2, rules, writer, board) }
 
   it 'starts with two players and a board' do
@@ -24,22 +23,22 @@ describe Game do
     game.other_player.should == player1
   end
 
-  it 'places a move in the board each turn' do
-    board.should_receive(:place_move).with(first_move)
+  it 'makes a move in the board each turn' do
+    board.should_receive(:make_move).with(first_move)
     game.next_turn
-    board.should_receive(:place_move).with(second_move)
+    board.should_receive(:make_move).with(second_move)
     game.next_turn
   end
 
-  it 'only places a valid move' do
-    rules.should_receive(:valid_move?).with(first_move).and_return false
-    board.should_not_receive(:place_move)
+  it 'only makes a valid move' do
+    rules.should_receive(:valid_move?).with(first_move, board).and_return false
+    board.should_not_receive(:make_move)
 
     game.next_turn
   end
 
   it 'only toggles players after a valid move' do
-    rules.should_receive(:valid_move?).with(first_move).and_return false
+    rules.should_receive(:valid_move?).with(first_move, board).and_return false
     game.next_turn
 
     game.current_player.should == player1

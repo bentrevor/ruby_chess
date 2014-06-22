@@ -1,6 +1,4 @@
-require 'board'
-require 'piece'
-require 'pry'
+require 'spec_helper'
 
 describe ChessBoard do
   let(:board) { ChessBoard.new }
@@ -10,9 +8,23 @@ describe ChessBoard do
   end
 
   it 'starts with pieces in some of the spaces' do
-    board.spaces[0..15].should be_all { |x| x.is_a? Piece }
-    board.spaces[16..47].should be_all { |x| x.nil? }
-    board.spaces[48..63].should be_all { |x| x.is_a? Piece }
+    board.piece_at('a1').type.should == :rook
+    board.piece_at('a1').color.should == :white
+    board.piece_at('a2').type.should == :pawn
+    board.piece_at('a2').color.should == :white
+
+    board.piece_at('a7').type.should == :pawn
+    board.piece_at('a7').color.should == :black
+    board.piece_at('a8').type.should == :rook
+    board.piece_at('a8').color.should == :black
+  end
+
+  it 'can make a move' do
+    move = 'a2 - a4'
+    board.place_move move
+
+    board.piece_at('a2').should be nil
+    board.piece_at('a4').type.should be :pawn
   end
 end
 

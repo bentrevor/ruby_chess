@@ -20,8 +20,8 @@ class Game
   def next_turn
     writer.show_board board
     move = current_player.get_move
-    if rules.valid_move?(move)
-      board.place_move(move)
+    if rules.valid_move?(move, board)
+      board.make_move(move)
       toggle_players
     end
   end

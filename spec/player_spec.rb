@@ -1,4 +1,4 @@
-require 'player'
+require 'spec_helper'
 
 describe Player do
   specify 'human players use input to decide a move' do

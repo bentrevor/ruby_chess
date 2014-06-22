@@ -1,4 +1,4 @@
-require 'reader'
+require 'spec_helper'
 
 describe Reader do
   it 'strips newlines from input' do

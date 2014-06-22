@@ -1,4 +1,4 @@
-require 'piece'
+require 'spec_helper'
 
 describe Piece do
   let(:rook) { Piece.new :rook, :black }

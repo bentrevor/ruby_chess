@@ -1,4 +1,4 @@
-require 'writer'
+require 'spec_helper'
 
 describe Writer do
   it 'prints to stdout' do
