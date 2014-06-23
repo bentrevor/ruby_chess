@@ -7,7 +7,13 @@ describe ChessBoard do
     board.spaces.length.should == 64
   end
 
-  it 'starts with pieces in some of the spaces' do
+  it 'can start with only some pieces' do
+    board = ChessBoard.new({:a1 => Piece.new(:rook, :black)})
+    board.piece_at('a1').type.should == :rook
+    board.piece_at('a1').color.should == :black
+  end
+
+  it 'uses the initial setup if no starting pieces are given' do
     board.piece_at('a1').type.should == :rook
     board.piece_at('a1').color.should == :white
     board.piece_at('a2').type.should == :pawn

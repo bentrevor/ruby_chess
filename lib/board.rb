@@ -4,8 +4,12 @@ class ChessBoard
   class Space < Struct.new(:file, :rank, :piece)
   end
 
-  def initialize
-    self.spaces = initial_layout
+  def initialize(pieces=nil)
+    self.spaces = if pieces
+                    starting_pieces(pieces)
+                  else
+                    initial_layout
+                  end
   end
 
   def piece_at(space)
@@ -31,6 +35,16 @@ class ChessBoard
   end
 
   private
+
+  def starting_pieces(pieces)
+    self.spaces = (0..63).map { |index| Space.new(file_for(index), rank_for(index), nil) }
+
+    pieces.each_pair do |space, piece|
+      get_space(space).piece = piece
+    end
+
+    self.spaces
+  end
 
   def color_for(rank)
     (rank < 3) ? :white : :black
@@ -62,10 +76,18 @@ class ChessBoard
   def build_space_for(index)
     return Space.new('a', 1, Piece.new(:rook, :white)) if index == 0 # can't divide by 0
 
-    file = ('a'.ord + (index % 8)).chr
-    rank = (index / 8) + 1
+    file = file_for index
+    rank = rank_for index
 
     Space.new(file, rank, piece_for(file, rank))
+  end
+
+  def file_for(index)
+    ('a'.ord + (index % 8)).chr
+  end
+
+  def rank_for(index)
+    (index / 8) + 1
   end
 
   def initial_layout
