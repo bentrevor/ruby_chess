@@ -67,14 +67,14 @@ class ChessBoard
     color = color_for rank
 
     if rank == 1 or rank == 8
-      Piece.new(piece_type_for(file), color)
+      PieceFactory.create(color, piece_type_for(file))
     elsif rank == 2 or rank == 7
-      Piece.new(:pawn, color)
+      PieceFactory.create(color, :pawn)
     end
   end
 
   def build_space_for(index)
-    return Space.new('a', 1, Piece.new(:rook, :white)) if index == 0 # can't divide by 0
+    return Space.new('a', 1, PieceFactory.create(:white, :rook)) if index == 0 # can't divide by 0
 
     file = file_for index
     rank = rank_for index

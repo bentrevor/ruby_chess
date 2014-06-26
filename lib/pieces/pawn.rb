@@ -1,0 +1,19 @@
+require 'pieces/piece'
+
+class Pawn < Piece
+  def initialize(color)
+    self.directions = pawn_directions
+    self.limit      = 1
+    self.color      = color
+  end
+
+  private
+
+  def pawn_directions
+    if color == :white
+      [:north]
+    else
+      [:south]
+    end
+  end
+end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ChessRules do
-  let(:rook)  { Piece.new :rook, :white }
+  let(:rook)  { PieceFactory.create :white, :rook }
   let(:board) { ChessBoard.new({'a1' => rook}) }
 
   describe '#valid_move?' do

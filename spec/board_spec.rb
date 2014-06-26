@@ -8,20 +8,20 @@ describe ChessBoard do
   end
 
   it 'can start with only some pieces' do
-    board = ChessBoard.new({:a1 => Piece.new(:rook, :black)})
-    board.piece_at('a1').type.should == :rook
+    board = ChessBoard.new({:a1 => PieceFactory.create(:black, :rook)})
+    board.piece_at('a1').should be_a Rook
     board.piece_at('a1').color.should == :black
   end
 
   it 'uses the initial setup if no starting pieces are given' do
-    board.piece_at('a1').type.should == :rook
+    board.piece_at('a1').should be_a Rook
     board.piece_at('a1').color.should == :white
-    board.piece_at('a2').type.should == :pawn
+    board.piece_at('a2').should be_a Pawn
     board.piece_at('a2').color.should == :white
 
-    board.piece_at('a7').type.should == :pawn
+    board.piece_at('a7').should be_a Pawn
     board.piece_at('a7').color.should == :black
-    board.piece_at('a8').type.should == :rook
+    board.piece_at('a8').should be_a Rook
     board.piece_at('a8').color.should == :black
   end
 
@@ -30,6 +30,6 @@ describe ChessBoard do
     board.place_move move
 
     board.piece_at('a2').should be nil
-    board.piece_at('a4').type.should be :pawn
+    board.piece_at('a4').should be_a Pawn
   end
 end
