@@ -94,15 +94,3 @@ class ChessBoard
     (0..63).map { |index| build_space_for index }
   end
 end
-
-class EchoBoard
-  attr_accessor :spaces
-
-  def initialize
-    self.spaces = ''
-  end
-
-  def place_move(move)
-    spaces << move
-  end
-end

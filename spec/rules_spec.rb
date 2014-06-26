@@ -1,21 +1,32 @@
-require 'rules'
+require 'spec_helper'
 
-describe EchoRules do
-  def board(spaces)
-    double 'board', :spaces => spaces
-  end
+describe ChessRules do
+  let(:rook)  { Piece.new :rook, :white }
+  let(:board) { ChessBoard.new({'a1' => rook}) }
 
-  it 'knows when a game is over' do
+  describe '#valid_move?' do
+    it 'knows when a move is valid' do
+      move = 'a1 - a2'
 
-    EchoRules.game_over?(board('yolo')).should == false
-    EchoRules.game_over?(board('swaggy')).should == true
-  end
+      ChessRules.valid_move?(move, board, :white).should == true
+    end
 
-  it 'knows the winner' do
-    EchoRules.winner.should == :nobody
-  end
+    it 'is false when there is no piece in original space' do
+      invalid_move = 'a4 - a5'
 
-  specify 'every move is valid' do
-    EchoRules.valid_move?(board('swag')).should == true
+      ChessRules.valid_move?(invalid_move, board, :white).should == false
+    end
+
+    it 'is false when it tries to move the wrong color piece' do
+      move = 'a1 - a2'
+
+      ChessRules.valid_move?(move, board, :black).should == false
+    end
+
+    it 'is false when it tries to make an illegal move' do
+      ChessRules.valid_move?('a1 - a2', board, :white).should == true
+      ChessRules.valid_move?('a1 - a3', board, :white).should == true
+      ChessRules.valid_move?('a1 - b2', board, :white).should == false
+    end
   end
 end
