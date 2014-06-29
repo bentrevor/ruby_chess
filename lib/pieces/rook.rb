@@ -5,5 +5,6 @@ class Rook < Piece
     self.directions = NON_DIAGONAL_DIRECTIONS
     self.limit      = 8
     self.color      = color
+    self.abbrev     = 'r'
   end
 end

@@ -5,6 +5,7 @@ class Pawn < Piece
     self.directions = pawn_directions
     self.limit      = 1
     self.color      = color
+    self.abbrev     = 'p'
   end
 
   private

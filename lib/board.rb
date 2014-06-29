@@ -12,13 +12,13 @@ class ChessBoard
                   end
   end
 
-  def piece_at(space)
+  def get_piece(space)
     space = get_space(space)
 
     space.piece
   end
 
-  def place_move(move)
+  def make_move(move)
     original_space = get_space(move.split.first)
     new_space = get_space(move.split.last)
     piece_to_move = original_space.piece
@@ -34,7 +34,51 @@ class ChessBoard
     spaces.select {|s| s.rank == rank}.find {|s| s.file == file}
   end
 
+  def formatted_for_console
+    printable_board = ""
+    divider = "----+----+----+----+----+----+----+----\n"
+
+    (0..63).each do |index|
+      printable_board << printable_space(index)
+      printable_board << divider if right_edge_space(index) and index < 60
+    end
+
+    printable_board.lines.reverse.join
+  end
+
   private
+
+  def right_edge_space(index)
+    (index + 1) % 8 == 0
+  end
+
+  def printable_space(index)
+    space = ""
+
+    piece = spaces[index].piece
+    if piece.nil?
+      space << '    '
+    else
+      space << " #{printable_piece(piece)} "
+    end
+
+    space << if right_edge_space(index)
+               "\n"
+             else
+               "|"
+             end
+    space
+  end
+
+  def printable_piece(piece)
+    printable = if piece.color == :black
+                  'b'
+                else
+                  'w'
+                end
+
+    printable + piece.abbrev
+  end
 
   def starting_pieces(pieces)
     self.spaces = (0..63).map { |index| Space.new(file_for(index), rank_for(index), nil) }

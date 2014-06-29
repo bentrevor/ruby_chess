@@ -5,5 +5,6 @@ class King < Piece
     self.directions = ALL_DIRECTIONS
     self.limit      = 1
     self.color      = color
+    self.abbrev     = 'k'
   end
 end
