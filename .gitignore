@@ -1,1 +1,3 @@
 deprecations.log
+vendor/ruby
+.bundle
