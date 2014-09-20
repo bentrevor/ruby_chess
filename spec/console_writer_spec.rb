@@ -8,8 +8,8 @@ describe ConsoleWriter do
   end
 
   it 'can print a board' do
-    board = double 'board', :spaces => 'spaces'
-    expect($stdout).to receive(:puts).with 'spaces'
+    board = ChessBoard.new
+    expect($stdout).to receive(:puts).with board.spaces
 
     ConsoleWriter.show_board board
   end
