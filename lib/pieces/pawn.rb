@@ -2,9 +2,9 @@ require './lib/pieces/piece'
 
 class Pawn < Piece
   def initialize(color)
+    self.color      = color
     self.directions = pawn_directions
     self.limit      = 1
-    self.color      = color
     self.abbrev     = 'p'
   end
 

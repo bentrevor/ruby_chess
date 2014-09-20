@@ -7,7 +7,7 @@ class ChessRules
 
     return false if piece.nil?
     return false if piece.color != current_color
-    return false unless moves_for(piece, board, starting_space).include? ending_space
+    return false unless moves_for(board, starting_space).include? ending_space
 
     true
   end
@@ -16,13 +16,12 @@ class ChessRules
     false
   end
 
-  private
-
-  def self.moves_for(piece, board, starting_index)
+  def self.moves_for(board, starting_space)
     moves = []
+    piece = board.get_piece(starting_space)
 
     piece.directions.each do |direction|
-      moves << remaining_spaces_for(direction, starting_index)
+      moves << remaining_spaces_for(direction, starting_space)
     end
 
     moves.flatten

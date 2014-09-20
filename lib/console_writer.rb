@@ -25,21 +25,25 @@ class ConsoleWriter
     end
 
     def unicode_for(piece)
-      {
-        "wk" => "\u2654",
-        "wq" => "\u2655",
-        "wr" => "\u2656",
-        "wb" => "\u2657",
-        "wn" => "\u2658",
-        "wp" => "\u2659",
+      if piece
+        {
+          "white k" => "\u2654",
+          "white q" => "\u2655",
+          "white r" => "\u2656",
+          "white b" => "\u2657",
+          "white n" => "\u2658",
+          "white p" => "\u2659",
 
-        "bk" => "\u265A",
-        "bq" => "\u265B",
-        "br" => "\u265C",
-        "bb" => "\u265D",
-        "bn" => "\u265E",
-        "bp" => "\u265F",
-      }["#{piece.color[0]}#{piece.abbrev}"].encode("utf-8") if piece
+          "black k" => "\u265A",
+          "black q" => "\u265B",
+          "black r" => "\u265C",
+          "black b" => "\u265D",
+          "black n" => "\u265E",
+          "black p" => "\u265F",
+        }["#{piece.color} #{piece.abbrev}"].encode("utf-8")
+      else
+        " "
+      end
     end
   end
 end
