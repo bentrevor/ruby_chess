@@ -1,91 +1,127 @@
 class ChessRules
-  def self.valid_move?(move, board, current_color)
-    starting_space = move.split.first
-    ending_space = move.split.last
-    space = board.get_space(starting_space)
-    piece = space.piece
+  class << self
+    def valid_move?(move, board, current_color)
+      starting_space = move.split.first
+      ending_space = move.split.last
+      space = board.get_space(starting_space)
+      piece = space.piece
 
-    return false if piece.nil?
-    return false if piece.color != current_color
-    return false unless moves_for(board, starting_space).include? ending_space
+      return false if piece.nil?
+      return false if piece.color != current_color
+      return false unless moves_for(board, starting_space).include? ending_space
 
-    true
-  end
-
-  def self.game_over?(board)
-    false
-  end
-
-  def self.moves_for(board, starting_space)
-    moves = []
-    piece = board.get_piece(starting_space)
-
-    piece.directions.each do |direction|
-      moves << remaining_spaces_for(direction, starting_space)
+      true
     end
 
-    moves.flatten
-  end
+    def game_over?(board)
+      false
+    end
 
-  def self.remaining_spaces_for(direction, current_space)
-    spaces = []
-    file = current_space[0]
-    rank = current_space[1].to_i
-    case direction
-    when :north
-      until rank == 8
+    def moves_for(board, starting_space)
+      moves = []
+      piece = board.get_piece(starting_space)
+
+      piece.directions.each do |direction|
+        moves << remaining_spaces_for(board, direction, starting_space)
+      end
+
+      moves.flatten
+    end
+
+    def remaining_spaces_for(board, direction, current_space)
+      moving_piece = board.get_piece(current_space)
+      spaces = []
+      file = current_space[0]
+      rank = current_space[1].to_i
+
+      case direction
+      when :north
         rank += 1
-        spaces << "#{file}#{rank}"
-      end
-    when :south
-      until rank == 1
+        until rank > 8
+          if target_piece = board.get_piece("#{file}#{rank}")
+            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            break
+          else
+            spaces << "#{file}#{rank}"
+            rank += 1
+          end
+        end
+      when :south
         rank -= 1
-        spaces << "#{file}#{rank}"
-      end
-    when :east
-      until file == 'h'
+        until rank == 0
+          if target_piece = board.get_piece("#{file}#{rank}")
+            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            break
+          else
+            spaces << "#{file}#{rank}"
+            rank -= 1
+          end
+        end
+      when :east
         file = incf(file)
-        spaces << "#{file}#{rank}"
-      end
-    when :west
-      until file == 'a'
+        until file == 'i'
+          if target_piece = board.get_piece("#{file}#{rank}")
+            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            break
+          else
+            spaces << "#{file}#{rank}"
+            file = incf(file)
+          end
+        end
+      when :west
         file = decf(file)
-        spaces << "#{file}#{rank}"
+        until file == '`'
+          if target_piece = board.get_piece("#{file}#{rank}")
+            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            break
+          else
+            spaces << "#{file}#{rank}"
+            file = decf(file)
+          end
+        end
+      when :northeast
+        until file == 'h' or rank == 8
+          rank += 1
+          file = incf(file)
+          spaces << "#{file}#{rank}"
+        end
+      when :northwest
+        until file == 'a' or rank == 8
+          rank += 1
+          file = decf(file)
+          spaces << "#{file}#{rank}"
+        end
+      when :southeast
+        until file == 'h' or rank == 1
+          rank -= 1
+          file = incf(file)
+          spaces << "#{file}#{rank}"
+        end
+      when :southwest
+        until file == 'a' or rank == 1
+          rank -= 1
+          file = decf(file)
+          spaces << "#{file}#{rank}"
+        end
       end
-    when :northeast
-      until file == 'h' or rank == 8
-        rank += 1
-        file = incf(file)
-        spaces << "#{file}#{rank}"
-      end
-    when :northwest
-      until file == 'a' or rank == 8
-        rank += 1
-        file = decf(file)
-        spaces << "#{file}#{rank}"
-      end
-    when :southeast
-      until file == 'h' or rank == 1
-        rank -= 1
-        file = incf(file)
-        spaces << "#{file}#{rank}"
-      end
-    when :southwest
-      until file == 'a' or rank == 1
-        rank -= 1
-        file = decf(file)
-        spaces << "#{file}#{rank}"
+
+      spaces
+    end
+
+    def piece_collision(moving_piece, target_piece, current_space, spaces)
+      if moving_piece.color == target_piece.color
+        spaces
+      else
+        spaces.push current_space
       end
     end
 
-    spaces
-  end
+    def incf(file)
+      (file.ord + 1).chr
+    end
 
-  def self.incf(file)
-    (file.ord + 1).chr
-  end
-
-  def self.decf(file)
-    (file.ord - 1).chr
+    def decf(file)
+      (file.ord - 1).chr
+    end
   end
 end
