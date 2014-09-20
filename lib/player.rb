@@ -1,4 +1,6 @@
 class Player
+  attr_accessor :color
+
   def initialize(move_decider)
     @decider = move_decider
   end

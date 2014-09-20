@@ -7,6 +7,9 @@ class Game
     self.rules          = rules
     self.writer         = writer
     self.board          = board
+
+    player1.color = :white
+    player2.color = :black
   end
 
   def start
@@ -20,7 +23,7 @@ class Game
   def next_turn
     writer.show_board board
     move = current_player.get_move
-    if rules.valid_move?(move, board)
+    if rules.valid_move?(move, board, current_player.color)
       board.make_move(move)
       toggle_players
     end

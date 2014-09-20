@@ -5,8 +5,8 @@ Dir["./lib/**/*.rb"].each do |file|
   require file
 end
 
-reader = ConsoleReader.new
-p1 = Player.new reader
-p2 = Player.new reader
+p1 = Player.new ConsoleReader
+p2 = Player.new ConsoleReader
 
 game = Game.new p1, p2, ChessRules, ConsoleWriter, ChessBoard.new
+game.start

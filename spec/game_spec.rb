@@ -1,19 +1,31 @@
 require 'spec_helper'
 
 describe Game do
-  let(:first_move) { 1 }
-  let(:second_move) { 2 }
-  let(:player1) { double 'human player', :get_move => first_move }
-  let(:player2) { double 'computer player', :get_move => second_move }
+  let(:first_move) { 'a1 - a2' }
+  let(:second_move) { 'b1 - b2' }
+  let(:player1) { double 'human player', :get_move => first_move, :color => :white }
+  let(:player2) { double 'computer player', :get_move => second_move, :color => :black }
   let(:rules)   { double 'game rules', :game_over? => true, :winner => nil, :valid_move? => true }
   let(:writer)  { double 'writer', :show => nil, :show_board => nil }
   let(:board)   { double 'board', :spaces => 'spaces', :make_move => nil }
   let(:game)    { Game.new(player1, player2, rules, writer, board) }
 
+  before :each do
+    allow(player1).to receive(:color=)
+    allow(player2).to receive(:color=)
+  end
+
   it 'starts with two players and a board' do
     expect(game.current_player).to eq player1
     expect(game.other_player).to eq player2
     expect(game.board).to eq board
+  end
+
+  it 'assigns colors to the players' do
+    expect(player1).to receive(:color=).with(:white)
+    expect(player2).to receive(:color=).with(:black)
+
+    game
   end
 
   it 'toggles players when a move is made' do
@@ -31,14 +43,14 @@ describe Game do
   end
 
   it 'only makes a valid move' do
-    expect(rules).to receive(:valid_move?).with(first_move, board).and_return false
+    expect(rules).to receive(:valid_move?).with(first_move, board, player1.color).and_return false
     expect(board).not_to receive(:make_move)
 
     game.next_turn
   end
 
   it 'only toggles players after a valid move' do
-    expect(rules).to receive(:valid_move?).with(first_move, board).and_return false
+    expect(rules).to receive(:valid_move?).with(first_move, board, player1.color).and_return false
     game.next_turn
 
     expect(game.current_player).to eq player1
