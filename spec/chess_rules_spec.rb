@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe ChessRules do
   let(:white_rook)   { PieceFactory.create :white, :rook }
+  let(:white_king)   { PieceFactory.create :white, :king }
   let(:black_king)   { PieceFactory.create :black, :king }
   let(:black_pawn)   { PieceFactory.create :black, :pawn }
   let(:white_pawn)   { PieceFactory.create :white, :pawn }
@@ -140,9 +141,11 @@ describe ChessRules do
   end
 
   describe '#in_check?' do
-    xit 'knows when the king is in check' do
-      board.get_space('a8').piece = black_king
+    it 'knows when the king is in check' do
+      board.get_space('d8').piece = black_king
+      board.get_space('h8').piece = white_king
 
+      expect(ChessRules.in_check?(board, :white)).to be false
       expect(ChessRules.in_check?(board, :black)).to be true
     end
   end

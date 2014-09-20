@@ -17,6 +17,29 @@ class ChessRules
       false
     end
 
+    def in_check?(board, color)
+      king_space = find_king_space(board, color)
+      other_color = [:white, :black].find { |c| c != color}
+
+      all_moves_for(board, other_color).include?(king_space)
+    end
+
+    def find_king_space(board, color)
+      board.pieces.find do |space, piece|
+        piece.color == color and piece.abbrev == 'k'
+      end[0]
+    end
+
+    def all_moves_for(board, color)
+      spaces_with_pieces = board.pieces.select do |space, piece|
+        piece.color == color
+      end.keys
+
+      moves = spaces_with_pieces.map do |space|
+        moves_for(board, space)
+      end.flatten.uniq
+    end
+
     def moves_for(board, starting_space)
       moves = []
       piece = board.get_piece(starting_space)

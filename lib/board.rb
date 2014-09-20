@@ -34,6 +34,12 @@ class ChessBoard
     spaces.select {|s| s.rank == rank}.find {|s| s.file == file}
   end
 
+  def pieces
+    spaces.each_with_object({}) do |s, acc|
+      acc["#{s.file}#{s.rank}"] = s.piece if s.piece
+    end
+  end
+
   private
 
   def right_edge_space(index)

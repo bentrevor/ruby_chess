@@ -32,4 +32,21 @@ describe ChessBoard do
     expect(board.get_piece('a2')).to be nil
     expect(board.get_piece('a4')).to be_a Pawn
   end
+
+  it 'lists all pieces' do
+    black_rook = PieceFactory.create(:black, :rook)
+    white_bishop = PieceFactory.create(:white, :bishop)
+    black_queen = PieceFactory.create(:black, :queen)
+
+    board = ChessBoard.new({
+                             :a1 => black_rook,
+                             :b1 => white_bishop,
+                             :h3 => black_queen
+                           })
+
+    expect(board.pieces['a1']).to be black_rook
+    expect(board.pieces['b1']).to be white_bishop
+    expect(board.pieces['h3']).to be black_queen
+
+  end
 end
