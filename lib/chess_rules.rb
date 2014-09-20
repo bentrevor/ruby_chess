@@ -48,7 +48,7 @@ class ChessRules
         end
       when :south
         rank -= 1
-        until rank == 0
+        until rank < 1
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -59,7 +59,7 @@ class ChessRules
         end
       when :east
         file = incf(file)
-        until file == 'i'
+        until file > 'h'
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -70,7 +70,7 @@ class ChessRules
         end
       when :west
         file = decf(file)
-        until file == '`'
+        until file < 'a'
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -80,28 +80,56 @@ class ChessRules
           end
         end
       when :northeast
-        until file == 'h' or rank == 8
-          rank += 1
-          file = incf(file)
-          spaces << "#{file}#{rank}"
+        rank += 1
+        file = incf(file)
+        until file > 'h' or rank > 8
+          if target_piece = board.get_piece("#{file}#{rank}")
+            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            break
+          else
+            spaces << "#{file}#{rank}"
+            rank += 1
+            file = incf(file)
+          end
         end
       when :northwest
-        until file == 'a' or rank == 8
-          rank += 1
-          file = decf(file)
-          spaces << "#{file}#{rank}"
+        rank += 1
+        file = decf(file)
+        until file < 'a' or rank > 8
+          if target_piece = board.get_piece("#{file}#{rank}")
+            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            break
+          else
+            spaces << "#{file}#{rank}"
+            rank += 1
+            file = decf(file)
+          end
         end
       when :southeast
-        until file == 'h' or rank == 1
-          rank -= 1
-          file = incf(file)
-          spaces << "#{file}#{rank}"
+        rank -= 1
+        file = incf(file)
+        until file > 'h' or rank < 1
+          if target_piece = board.get_piece("#{file}#{rank}")
+            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            break
+          else
+            spaces << "#{file}#{rank}"
+            rank -= 1
+            file = incf(file)
+          end
         end
       when :southwest
-        until file == 'a' or rank == 1
-          rank -= 1
-          file = decf(file)
-          spaces << "#{file}#{rank}"
+        rank -= 1
+        file = decf(file)
+        until file < 'a' or rank < 1
+          if target_piece = board.get_piece("#{file}#{rank}")
+            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            break
+          else
+            spaces << "#{file}#{rank}"
+            rank -= 1
+            file = decf(file)
+          end
         end
       end
 

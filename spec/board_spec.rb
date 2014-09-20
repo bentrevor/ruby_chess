@@ -32,15 +32,4 @@ describe ChessBoard do
     expect(board.get_piece('a2')).to be nil
     expect(board.get_piece('a4')).to be_a Pawn
   end
-
-  it 'can format itself to print to a console' do
-    printable_board = board.formatted_for_console.lines
-
-    expect(printable_board.first).to eq " br | bn | bb | bq | bk | bb | bn | br \n"
-    expect(printable_board).to include "----+----+----+----+----+----+----+----\n"
-    expect(printable_board).to include "    |    |    |    |    |    |    |    \n"
-    expect(printable_board).to include " wp | wp | wp | wp | wp | wp | wp | wp \n"
-    expect(printable_board).to include " wr | wn | wb | wq | wk | wb | wn | wr \n"
-    expect(printable_board).to include " bp | bp | bp | bp | bp | bp | bp | bp \n"
-  end
 end
