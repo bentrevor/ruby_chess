@@ -1,4 +1,4 @@
-class Writer
+class ConsoleWriter
   def self.show(message)
     $stdout.puts message
   end

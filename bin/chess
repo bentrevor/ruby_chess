@@ -1,1 +1,12 @@
 #!/usr/bin/ruby
+require 'pry'
+
+Dir["./lib/**/*.rb"].each do |file|
+  require file
+end
+
+reader = ConsoleReader.new
+p1 = Player.new reader
+p2 = Player.new reader
+
+game = Game.new p1, p2, ChessRules, ConsoleWriter, ChessBoard.new

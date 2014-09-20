@@ -1,4 +1,4 @@
-require 'pieces/piece'
+require './lib/pieces/piece'
 
 class King < Piece
   def initialize(color)

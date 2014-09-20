@@ -9,39 +9,39 @@ describe Piece do
   let(:pawn)   { PieceFactory.create :black, :pawn }
 
   it 'knows how to move' do
-    rook.directions.should include :north
-    rook.directions.should include :south
-    rook.directions.should include :east
-    rook.directions.should include :west
+    expect(rook.directions).to include :north
+    expect(rook.directions).to include :south
+    expect(rook.directions).to include :east
+    expect(rook.directions).to include :west
 
-    bishop.directions.should include :northeast
-    bishop.directions.should include :northwest
-    bishop.directions.should include :southeast
-    bishop.directions.should include :southwest
+    expect(bishop.directions).to include :northeast
+    expect(bishop.directions).to include :northwest
+    expect(bishop.directions).to include :southeast
+    expect(bishop.directions).to include :southwest
 
-    queen.directions.should include :north
-    queen.directions.should include :south
-    queen.directions.should include :east
-    queen.directions.should include :west
-    queen.directions.should include :northeast
-    queen.directions.should include :northwest
-    queen.directions.should include :southeast
-    queen.directions.should include :southwest
+    expect(queen.directions).to include :north
+    expect(queen.directions).to include :south
+    expect(queen.directions).to include :east
+    expect(queen.directions).to include :west
+    expect(queen.directions).to include :northeast
+    expect(queen.directions).to include :northwest
+    expect(queen.directions).to include :southeast
+    expect(queen.directions).to include :southwest
 
-    king.directions.should include :north
-    king.directions.should include :south
-    king.directions.should include :east
-    king.directions.should include :west
-    king.directions.should include :northeast
-    king.directions.should include :northwest
-    king.directions.should include :southeast
-    king.directions.should include :southwest
+    expect(king.directions).to include :north
+    expect(king.directions).to include :south
+    expect(king.directions).to include :east
+    expect(king.directions).to include :west
+    expect(king.directions).to include :northeast
+    expect(king.directions).to include :northwest
+    expect(king.directions).to include :southeast
+    expect(king.directions).to include :southwest
   end
 
   it 'knows how far it can move' do
-    king.limit.should == 1
-    pawn.limit.should == 1
-    queen.limit.should == 8
+    expect(king.limit).to eq 1
+    expect(pawn.limit).to eq 1
+    expect(queen.limit).to eq 8
   end
 
   context 'legal moves' do
@@ -51,7 +51,7 @@ describe Piece do
       board.get_space('a1').piece = rook
 
       ('b'..'h').each do |file|
-        rook.available_moves(board, 'a1').should include "#{file}1"
+        expect(rook.available_moves(board, 'a1')).to include "#{file}1"
       end
     end
 
@@ -59,7 +59,7 @@ describe Piece do
       board.get_space('a1').piece = rook
 
       (2..8).each do |rank|
-        rook.available_moves(board, 'a1').should include "a#{rank}"
+        expect(rook.available_moves(board, 'a1')).to include "a#{rank}"
       end
     end
 
@@ -67,7 +67,7 @@ describe Piece do
       board.get_space('h8').piece = rook
 
       ('a'..'g').each do |file|
-        rook.available_moves(board, 'h8').should include "#{file}8"
+        expect(rook.available_moves(board, 'h8')).to include "#{file}8"
       end
     end
 
@@ -75,7 +75,7 @@ describe Piece do
       board.get_space('h8').piece = rook
 
       (1..7).each do |rank|
-        rook.available_moves(board, 'h8').should include "h#{rank}"
+        expect(rook.available_moves(board, 'h8')).to include "h#{rank}"
       end
     end
 
@@ -86,7 +86,7 @@ describe Piece do
         file = (104 - i).chr
         rank = 8 - i
 
-        bishop.available_moves(board, 'h8').should include "#{file}#{rank}"
+        expect(bishop.available_moves(board, 'h8')).to include "#{file}#{rank}"
       end
     end
 
@@ -95,7 +95,7 @@ describe Piece do
 
       (2..8).each do |rank|
         file = (96 + rank).chr
-        bishop.available_moves(board, 'a1').should include "#{file}#{rank}"
+        expect(bishop.available_moves(board, 'a1')).to include "#{file}#{rank}"
       end
     end
 
@@ -105,7 +105,7 @@ describe Piece do
       (1..7).each do |i|
         file = (97 + i).chr
         rank = 8 - i
-        bishop.available_moves(board, 'a8').should include "#{file}#{rank}"
+        expect(bishop.available_moves(board, 'a8')).to include "#{file}#{rank}"
       end
     end
 
@@ -114,7 +114,7 @@ describe Piece do
 
       (2..8).each do |rank|
         file = (105 - rank).chr
-        bishop.available_moves(board, 'h1').should include "#{file}#{rank}"
+        expect(bishop.available_moves(board, 'h1')).to include "#{file}#{rank}"
       end
     end
   end

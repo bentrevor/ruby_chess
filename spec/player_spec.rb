@@ -5,7 +5,7 @@ describe Player do
     input = double 'input'
     player = Player.new input
 
-    input.should_receive :get_move
+    expect(input).to receive :get_move
 
     player.get_move
   end
@@ -14,7 +14,7 @@ describe Player do
     ai = double 'ai'
     player = Player.new ai
 
-    ai.should_receive :get_move
+    expect(ai).to receive :get_move
 
     player.get_move
   end
