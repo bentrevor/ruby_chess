@@ -1,5 +1,5 @@
 class Piece
-  attr_accessor :abbrev, :color, :directions, :limit
+  attr_accessor :abbrev, :color, :directions
 
   DIAGONAL_DIRECTIONS = [:northeast, :northwest, :southeast, :southwest]
   NON_DIAGONAL_DIRECTIONS = [:north, :east, :south, :west]

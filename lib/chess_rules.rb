@@ -57,11 +57,13 @@ class ChessRules
       file = current_space[0]
       rank = current_space[1].to_i
       moves_so_far = 0
+      move_limit = moving_piece.limit(rank)
 
       case direction
       when :north
+        moves_so_far += 1
         rank += 1
-        until rank > 8 or moves_so_far >= moving_piece.limit
+        until rank > 8 or moves_so_far > move_limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -72,8 +74,9 @@ class ChessRules
           end
         end
       when :south
+        moves_so_far += 1
         rank -= 1
-        until rank < 1 or moves_so_far >= moving_piece.limit
+        until rank < 1 or moves_so_far > move_limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -84,8 +87,9 @@ class ChessRules
           end
         end
       when :east
+        moves_so_far += 1
         file = incf(file)
-        until file > 'h' or moves_so_far >= moving_piece.limit
+        until file > 'h' or moves_so_far > move_limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -96,8 +100,9 @@ class ChessRules
           end
         end
       when :west
+        moves_so_far += 1
         file = decf(file)
-        until file < 'a' or moves_so_far >= moving_piece.limit
+        until file < 'a' or moves_so_far > move_limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -108,9 +113,10 @@ class ChessRules
           end
         end
       when :northeast
+        moves_so_far += 1
         rank += 1
         file = incf(file)
-        until file > 'h' or rank > 8 or moves_so_far >= moving_piece.limit
+        until file > 'h' or rank > 8 or moves_so_far > move_limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -122,9 +128,10 @@ class ChessRules
           end
         end
       when :northwest
+        moves_so_far += 1
         rank += 1
         file = decf(file)
-        until file < 'a' or rank > 8 or moves_so_far >= moving_piece.limit
+        until file < 'a' or rank > 8 or moves_so_far > move_limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -136,9 +143,10 @@ class ChessRules
           end
         end
       when :southeast
+        moves_so_far += 1
         rank -= 1
         file = incf(file)
-        until file > 'h' or rank < 1 or moves_so_far >= moving_piece.limit
+        until file > 'h' or rank < 1 or moves_so_far > move_limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
@@ -150,9 +158,10 @@ class ChessRules
           end
         end
       when :southwest
+        moves_so_far += 1
         rank -= 1
         file = decf(file)
-        until file < 'a' or rank < 1 or moves_so_far >= moving_piece.limit
+        until file < 'a' or rank < 1 or moves_so_far > move_limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break

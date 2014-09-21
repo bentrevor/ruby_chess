@@ -23,9 +23,12 @@ class Game
   def next_turn
     writer.show_board board
     move = current_player.get_move
+
     if rules.valid_move?(move, board, current_player.color)
       board.make_move(move)
       toggle_players
+    else
+      writer.show "invalid move"
     end
   end
 

@@ -39,8 +39,9 @@ describe Piece do
   end
 
   it 'knows how far it can move' do
-    expect(king.limit).to eq 1
-    expect(pawn.limit).to eq 1
-    expect(queen.limit).to eq 8
+    expect(king.limit(0)).to eq 1
+    expect(pawn.limit(7)).to eq 2
+    expect(pawn.limit(6)).to eq 1
+    expect(queen.limit(8)).to eq 7
   end
 end
