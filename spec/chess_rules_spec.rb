@@ -47,6 +47,18 @@ describe ChessRules do
       end
     end
 
+    it 'limits the length of moves' do
+      board.get_space('d4').piece = black_king
+
+      %w[c5 d5 e5 e4 e3 d3 c3 c4].each do |space|
+        expect(ChessRules.moves_for(board, 'd4')).to include space
+      end
+
+      %w[b6 d6 f6 f4 f2 d2 b2 b4].each do |space|
+        expect(ChessRules.moves_for(board, 'd4')).not_to include space
+      end
+    end
+
     it "doesn't let a piece move through a teammate" do
       board.get_space('d6').piece = white_pawn
       expect(ChessRules.moves_for(board, 'd4')).to include 'd5'

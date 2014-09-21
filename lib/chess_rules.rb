@@ -56,61 +56,67 @@ class ChessRules
       spaces = []
       file = current_space[0]
       rank = current_space[1].to_i
+      moves_so_far = 0
 
       case direction
       when :north
         rank += 1
-        until rank > 8
+        until rank > 8 or moves_so_far >= moving_piece.limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
             spaces << "#{file}#{rank}"
+            moves_so_far += 1
             rank += 1
           end
         end
       when :south
         rank -= 1
-        until rank < 1
+        until rank < 1 or moves_so_far >= moving_piece.limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
             spaces << "#{file}#{rank}"
+            moves_so_far += 1
             rank -= 1
           end
         end
       when :east
         file = incf(file)
-        until file > 'h'
+        until file > 'h' or moves_so_far >= moving_piece.limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
             spaces << "#{file}#{rank}"
+            moves_so_far += 1
             file = incf(file)
           end
         end
       when :west
         file = decf(file)
-        until file < 'a'
+        until file < 'a' or moves_so_far >= moving_piece.limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
             spaces << "#{file}#{rank}"
+            moves_so_far += 1
             file = decf(file)
           end
         end
       when :northeast
         rank += 1
         file = incf(file)
-        until file > 'h' or rank > 8
+        until file > 'h' or rank > 8 or moves_so_far >= moving_piece.limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
             spaces << "#{file}#{rank}"
+            moves_so_far += 1
             rank += 1
             file = incf(file)
           end
@@ -118,12 +124,13 @@ class ChessRules
       when :northwest
         rank += 1
         file = decf(file)
-        until file < 'a' or rank > 8
+        until file < 'a' or rank > 8 or moves_so_far >= moving_piece.limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
             spaces << "#{file}#{rank}"
+            moves_so_far += 1
             rank += 1
             file = decf(file)
           end
@@ -131,12 +138,13 @@ class ChessRules
       when :southeast
         rank -= 1
         file = incf(file)
-        until file > 'h' or rank < 1
+        until file > 'h' or rank < 1 or moves_so_far >= moving_piece.limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
             spaces << "#{file}#{rank}"
+            moves_so_far += 1
             rank -= 1
             file = incf(file)
           end
@@ -144,12 +152,13 @@ class ChessRules
       when :southwest
         rank -= 1
         file = decf(file)
-        until file < 'a' or rank < 1
+        until file < 'a' or rank < 1 or moves_so_far >= moving_piece.limit
           if target_piece = board.get_piece("#{file}#{rank}")
             spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
             spaces << "#{file}#{rank}"
+            moves_so_far += 1
             rank -= 1
             file = decf(file)
           end
