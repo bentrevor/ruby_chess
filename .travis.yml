@@ -1,0 +1,14 @@
+language: ruby
+cache: bundler
+rvm:
+  - 1.9.3
+
+script: bundle exec rake rspec
+bundler_args: --without development --path=~/.bundle
+
+before_install:
+  - export BUNDLE_ARCHIVE="chess_ENGINE-$RUBY_VERSION"
+  - "gem list | grep bundle_cache >/dev/null 2>&1 || gem install bundle_cache"
+  - bundle_cache_install
+after_script:
+  - bundle_cache
