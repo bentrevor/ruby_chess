@@ -50,7 +50,7 @@ class ChessBoard
     self.spaces = (0..63).map { |index| Space.new(file_for(index), rank_for(index), nil) }
 
     pieces.each_pair do |space, piece|
-      get_space(space).piece = piece
+      place_piece piece, space
     end
 
     self.spaces
