@@ -6,6 +6,7 @@ class ChessRules
       space = board.get_space(starting_space)
       piece = space.piece
 
+      # TODO logic programming
       return false if piece.nil?
       return false if piece.color != current_color
       return false unless moves_for(board, starting_space).include? ending_space

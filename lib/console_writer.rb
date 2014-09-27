@@ -24,6 +24,8 @@ class ConsoleWriter
       rows.unshift "   a b c d e f g h "
     end
 
+    private
+
     def unicode_for(piece)
       if piece
         {

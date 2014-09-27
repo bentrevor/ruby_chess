@@ -2,13 +2,17 @@ require 'spec_helper'
 
 describe ChessBoard do
   let(:board) { ChessBoard.new }
+  let(:black_rook) { PieceFactory.create(:black, :rook) }
+  let(:white_bishop) { PieceFactory.create(:white, :bishop) }
+  let(:black_queen) { PieceFactory.create(:black, :queen) }
+
 
   it 'has 64 spaces' do
     expect(board.spaces.length).to eq 64
   end
 
   it 'can start with only some pieces' do
-    board = ChessBoard.new({:a1 => PieceFactory.create(:black, :rook)})
+    board = ChessBoard.new({:a1 => black_rook })
     expect(board.get_piece('a1')).to be_a Rook
     expect(board.get_piece('a1').color).to eq :black
   end
@@ -25,28 +29,26 @@ describe ChessBoard do
     expect(board.get_piece('a8').color).to eq :black
   end
 
-  it 'can make a move' do
-    move = 'a2 - a4'
-    board.make_move move
+  it 'can move a piece' do
+    board.move_piece 'a2 - a4'
 
     expect(board.get_piece('a2')).to be nil
     expect(board.get_piece('a4')).to be_a Pawn
   end
 
-  it 'lists all pieces' do
-    black_rook = PieceFactory.create(:black, :rook)
-    white_bishop = PieceFactory.create(:white, :bishop)
-    black_queen = PieceFactory.create(:black, :queen)
+  it 'can place a piece' do
+    board.place_piece(black_queen, 'd4')
 
-    board = ChessBoard.new({
-                             :a1 => black_rook,
+    expect(board.get_piece('d4')).to be black_queen
+  end
+
+  it 'lists all pieces' do
+    board = ChessBoard.new({ :a1 => black_rook,
                              :b1 => white_bishop,
-                             :h3 => black_queen
-                           })
+                             :h3 => black_queen })
 
     expect(board.pieces['a1']).to be black_rook
     expect(board.pieces['b1']).to be white_bishop
     expect(board.pieces['h3']).to be black_queen
-
   end
 end

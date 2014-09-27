@@ -12,26 +12,26 @@ class ChessBoard
                   end
   end
 
-  def get_piece(space)
-    space = get_space(space)
+  def move_piece(move)
+    original_space = get_space(move.split.first)
 
-    space.piece
+    place_piece(original_space.piece, move.split.last)
+    original_space.piece = nil
   end
 
-  def make_move(move)
-    original_space = get_space(move.split.first)
-    new_space = get_space(move.split.last)
-    piece_to_move = original_space.piece
-
-    new_space.piece = piece_to_move
-    original_space.piece = nil
+  def place_piece(piece, space)
+    get_space(space).piece = piece
   end
 
   def get_space(space)
     file = space[0]
     rank = space[1].to_i
 
-    spaces.select {|s| s.rank == rank}.find {|s| s.file == file}
+    spaces.find { |s| s.rank == rank and s.file == file }
+  end
+
+  def get_piece(space)
+    get_space(space).piece
   end
 
   def pieces

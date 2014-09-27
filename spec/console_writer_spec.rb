@@ -7,9 +7,14 @@ describe ConsoleWriter do
     ConsoleWriter.show('yolo')
   end
 
-  xit 'can print a board' do
+  it 'formats a board for the console' do
     board = ChessBoard.new
-    expect($stdout).to receive(:puts).with board.spaces
+    spaces = board.spaces
+    printable_board = ConsoleWriter.printable(spaces)
+
+    expect(printable_board.length).to be 9 # includes a rank for the file labels
+    expect(board).to receive(:spaces).and_return spaces
+    expect($stdout).to receive(:puts).with printable_board
 
     ConsoleWriter.show_board board
   end

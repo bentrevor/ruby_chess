@@ -25,7 +25,7 @@ class Game
     move = current_player.get_move
 
     if rules.valid_move?(move, board, current_player.color)
-      board.make_move(move)
+      board.move_piece(move)
       toggle_players
     else
       writer.show "invalid move"

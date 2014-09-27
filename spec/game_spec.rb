@@ -7,7 +7,7 @@ describe Game do
   let(:player2) { double 'computer player', :get_move => second_move, :color => :black }
   let(:rules)   { double 'game rules', :game_over? => true, :winner => nil, :valid_move? => true }
   let(:writer)  { double 'writer', :show => nil, :show_board => nil }
-  let(:board)   { double 'board', :spaces => 'spaces', :make_move => nil }
+  let(:board)   { double 'board', :spaces => 'spaces', :move_piece => nil }
   let(:game)    { Game.new(player1, player2, rules, writer, board) }
 
   before :each do
@@ -36,15 +36,15 @@ describe Game do
   end
 
   it 'makes a move in the board each turn' do
-    expect(board).to receive(:make_move).with(first_move)
+    expect(board).to receive(:move_piece).with(first_move)
     game.next_turn
-    expect(board).to receive(:make_move).with(second_move)
+    expect(board).to receive(:move_piece).with(second_move)
     game.next_turn
   end
 
   it 'only makes a valid move' do
     expect(rules).to receive(:valid_move?).with(first_move, board, player1.color).and_return false
-    expect(board).not_to receive(:make_move)
+    expect(board).not_to receive(:move_piece)
 
     game.next_turn
   end

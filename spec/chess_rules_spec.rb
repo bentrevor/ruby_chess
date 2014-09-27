@@ -34,6 +34,10 @@ describe ChessRules do
       expect(ChessRules.valid_move?('d4 - h4', board, :white)).to eq true
       expect(ChessRules.valid_move?('d4 - e5', board, :white)).to eq false
     end
+
+    it "doesn't let you move into check" do
+      board.get_space('d6').piece = white_pawn
+    end
   end
 
   describe 'horizontal/vertical #moves_for' do
