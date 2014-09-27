@@ -1,12 +1,13 @@
 require 'spec_helper'
 
 describe FindMoves do
-  let(:white_rook)   { Piece.create :white, :rook }
-  let(:white_king)   { Piece.create :white, :king }
   let(:black_king)   { Piece.create :black, :king }
+  let(:black_knight) { Piece.create :black, :knight }
   let(:black_pawn)   { Piece.create :black, :pawn }
-  let(:white_pawn)   { Piece.create :white, :pawn }
   let(:white_bishop) { Piece.create :white, :bishop }
+  let(:white_king)   { Piece.create :white, :king }
+  let(:white_pawn)   { Piece.create :white, :pawn }
+  let(:white_rook)   { Piece.create :white, :rook }
 
   let(:board) { ChessBoard.new({'d4' => white_rook}) }
 
@@ -123,6 +124,13 @@ describe FindMoves do
       expect(FindMoves.call(board, 'd4')).to include 'f2'
       expect(FindMoves.call(board, 'd4')).not_to include 'g1'
       expect(FindMoves.call(board, 'd4')).not_to include 'd4'
+    end
+  end
+
+  describe 'knight moves' do
+    it 'knows where a knight can move' do
+      board.place_piece(black_knight, 'd4')
+      expect(FindMoves.call(board, 'd4').sort).to eq %w[b3 b5 c2 c6 e2 e6 f3 f5]
     end
   end
 end

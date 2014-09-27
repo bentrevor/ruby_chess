@@ -5,6 +5,7 @@ class ConsoleWriter
     end
 
     def show_board(board)
+      Kernel.system "clear"
       show(printable(board.spaces))
     end
 

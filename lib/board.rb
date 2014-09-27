@@ -21,7 +21,7 @@ class ChessBoard
   end
 
   def correctly_formatted?(move)
-    move.length == 7 and move[3] == '-'
+    move.length == 7 and move[3] == '-' and (1..8).include?(move[1].to_i) and (1..8).include?(move[-1].to_i)
   end
 
   def place_piece(piece, space)
