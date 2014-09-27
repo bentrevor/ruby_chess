@@ -1,12 +1,14 @@
 require 'spec_helper'
 
 describe ChessRules do
-  let(:white_rook)   { Piece.create :white, :rook }
-  let(:white_king)   { Piece.create :white, :king }
+  let(:white_bishop) { Piece.create :black, :bishop }
   let(:black_king)   { Piece.create :black, :king }
   let(:black_pawn)   { Piece.create :black, :pawn }
-  let(:white_pawn)   { Piece.create :white, :pawn }
+  let(:black_rook)   { Piece.create :black, :rook }
   let(:white_bishop) { Piece.create :white, :bishop }
+  let(:white_king)   { Piece.create :white, :king }
+  let(:white_pawn)   { Piece.create :white, :pawn }
+  let(:white_rook)   { Piece.create :white, :rook }
 
   let(:board) { ChessBoard.new({'d4' => white_rook}) }
 
@@ -29,7 +31,7 @@ describe ChessRules do
       expect(ChessRules.valid_move?('d4 - e5', board, :white)).to eq false
     end
 
-    xit "doesn't let you move into check" do
+    it "doesn't let you move into check" do
       board.place_piece(black_king, 'c3')
 
       %w[b4 c4 d3 d2].each do |invalid_move|
@@ -37,8 +39,24 @@ describe ChessRules do
       end
 
       %w[b3 b2 c2 d4].each do |valid_move|
-        expect(ChessRules.valid_move?("c3 - #{valid_move}", board, :black)).to eq false
+        expect(ChessRules.valid_move?("c3 - #{valid_move}", board, :black)).to eq true
       end
+
+      board.place_piece(white_bishop, 'e5')
+      expect(ChessRules.valid_move?("c3 - d4", board, :black)).to eq false
+    end
+
+    it 'forces you to move out of check' do
+      board.place_piece(black_king, 'c4')
+      board.place_piece(black_rook, 'e4')
+
+      expect(ChessRules.valid_move?('e4 - e5', board, :black)).to eq false
+      expect(ChessRules.valid_move?('e4 - d4', board, :black)).to eq true
+
+      expect(ChessRules.valid_move?('c4 - b4', board, :black)).to eq false
+      expect(ChessRules.valid_move?('c4 - d5', board, :black)).to eq false
+      expect(ChessRules.valid_move?('c4 - c5', board, :black)).to eq true
+      expect(ChessRules.valid_move?('c4 - d4', board, :black)).to eq true
     end
   end
 

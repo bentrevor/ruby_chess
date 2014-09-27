@@ -2,7 +2,7 @@ class FindMoves
   class << self
     def call(board, starting_space)
       moves = []
-      piece = board.get_piece(starting_space)
+      piece = board.pieces[starting_space]
 
       piece.directions.each do |direction|
         moves << remaining_spaces_for(board, direction, starting_space)
@@ -12,7 +12,9 @@ class FindMoves
     end
 
     def remaining_spaces_for(board, direction, current_space)
-      moving_piece = board.get_piece(current_space)
+      moving_piece = board.pieces[current_space]
+      return [] if moving_piece.class == Knight
+
       spaces = []
       file = current_space[0]
       rank = current_space[1].to_i
@@ -23,7 +25,7 @@ class FindMoves
       when :north
         rank += 1
         until invalid?(rank, file, moves_so_far, move_limit)
-          if target_piece = board.get_piece("#{file}#{rank}")
+          if target_piece = board.pieces["#{file}#{rank}"]
             piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
@@ -35,7 +37,7 @@ class FindMoves
       when :south
         rank -= 1
         until invalid?(rank, file, moves_so_far, move_limit)
-          if target_piece = board.get_piece("#{file}#{rank}")
+          if target_piece = board.pieces["#{file}#{rank}"]
             piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
@@ -47,7 +49,7 @@ class FindMoves
       when :east
         file = incf(file)
         until invalid?(rank, file, moves_so_far, move_limit)
-          if target_piece = board.get_piece("#{file}#{rank}")
+          if target_piece = board.pieces["#{file}#{rank}"]
             piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
@@ -59,7 +61,7 @@ class FindMoves
       when :west
         file = decf(file)
         until invalid?(rank, file, moves_so_far, move_limit)
-          if target_piece = board.get_piece("#{file}#{rank}")
+          if target_piece = board.pieces["#{file}#{rank}"]
             piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
@@ -72,7 +74,7 @@ class FindMoves
         rank += 1
         file = incf(file)
         until invalid?(rank, file, moves_so_far, move_limit)
-          if target_piece = board.get_piece("#{file}#{rank}")
+          if target_piece = board.pieces["#{file}#{rank}"]
             piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
@@ -85,7 +87,7 @@ class FindMoves
         rank += 1
         file = decf(file)
         until invalid?(rank, file, moves_so_far, move_limit)
-          if target_piece = board.get_piece("#{file}#{rank}")
+          if target_piece = board.pieces["#{file}#{rank}"]
             piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
@@ -98,7 +100,7 @@ class FindMoves
         rank -= 1
         file = incf(file)
         until invalid?(rank, file, moves_so_far, move_limit)
-          if target_piece = board.get_piece("#{file}#{rank}")
+          if target_piece = board.pieces["#{file}#{rank}"]
             piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
@@ -111,7 +113,7 @@ class FindMoves
         rank -= 1
         file = decf(file)
         until invalid?(rank, file, moves_so_far, move_limit)
-          if target_piece = board.get_piece("#{file}#{rank}")
+          if target_piece = board.pieces["#{file}#{rank}"]
             piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else

@@ -2,16 +2,15 @@ class ChessRules
   class << self
     def valid_move?(move, board, current_color)
       starting_space = move.split.first
-      ending_space = move.split.last
-      space = board.get_space(starting_space)
-      piece = space.piece
+      target_space = move.split.last
+      piece = board.get_space(starting_space).piece
 
       return false if piece.nil?
       return false if piece.color != current_color
 
       moves = FindMoves.call(board, starting_space)
       valid_moves = find_valid(moves, board, starting_space, current_color)
-      return false unless valid_moves.include? ending_space
+      return false unless valid_moves.include? target_space
 
       true
     end
@@ -44,7 +43,16 @@ class ChessRules
     end
 
     def find_valid(target_spaces, board, starting_space, current_color)
-      target_spaces
+      valid_moves = []
+      piece = board.pieces[starting_space]
+      target_spaces.each do |new_space|
+        board.try_move("#{starting_space} - #{new_space}") do
+          if !in_check?(board, current_color)
+            valid_moves << new_space
+          end
+        end
+      end
+      valid_moves
     end
   end
 end

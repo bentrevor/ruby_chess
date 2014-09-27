@@ -13,20 +13,20 @@ describe ChessBoard do
 
   it 'can start with only some pieces' do
     board = ChessBoard.new({:a1 => black_rook })
-    expect(board.get_piece('a1')).to be_a Rook
-    expect(board.get_piece('a1').color).to eq :black
+    expect(board.pieces['a1']).to be_a Rook
+    expect(board.pieces['a1'].color).to eq :black
   end
 
   it 'uses the initial setup if no starting pieces are given' do
-    expect(board.get_piece('a1')).to be_a Rook
-    expect(board.get_piece('a1').color).to eq :white
-    expect(board.get_piece('a2')).to be_a Pawn
-    expect(board.get_piece('a2').color).to eq :white
+    expect(board.pieces['a1']).to be_a Rook
+    expect(board.pieces['a1'].color).to eq :white
+    expect(board.pieces['a2']).to be_a Pawn
+    expect(board.pieces['a2'].color).to eq :white
 
-    expect(board.get_piece('a7')).to be_a Pawn
-    expect(board.get_piece('a7').color).to eq :black
-    expect(board.get_piece('a8')).to be_a Rook
-    expect(board.get_piece('a8').color).to eq :black
+    expect(board.pieces['a7']).to be_a Pawn
+    expect(board.pieces['a7'].color).to eq :black
+    expect(board.pieces['a8']).to be_a Rook
+    expect(board.pieces['a8'].color).to eq :black
   end
 
   it 'raises an error if it gets the wrong format move' do
@@ -36,8 +36,8 @@ describe ChessBoard do
   it 'can move a piece' do
     board.move_piece 'a2 - a4'
 
-    expect(board.get_piece('a2')).to be nil
-    expect(board.get_piece('a4')).to be_a Pawn
+    expect(board.pieces['a2']).to be nil
+    expect(board.pieces['a4']).to be_a Pawn
   end
 
   it 'can capture a piece' do
@@ -46,14 +46,24 @@ describe ChessBoard do
 
     board.move_piece 'a1 - a2'
 
-    expect(board.get_piece('a1')).to be nil
-    expect(board.get_piece('a2')).to be_a Rook
+    expect(board.pieces['a1']).to be nil
+    expect(board.pieces['a2']).to be_a Rook
   end
 
   it 'can place a piece' do
     board.place_piece(black_queen, 'd4')
 
-    expect(board.get_piece('d4')).to be black_queen
+    expect(board.pieces['d4']).to be black_queen
+  end
+
+  it 'can try/undo a move' do
+    board.try_move('a2 - a4') do
+      expect(board.pieces['a2']).to be_nil
+      expect(board.pieces['a4']).to be_a Pawn
+    end
+
+    expect(board.pieces['a2']).to be_a Pawn
+    expect(board.pieces['a4']).to be_nil
   end
 
   it 'lists all pieces' do

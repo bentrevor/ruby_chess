@@ -35,14 +35,24 @@ class ChessBoard
     spaces.find { |s| s.rank == rank and s.file == file }
   end
 
-  def get_piece(space)
-    get_space(space).piece
-  end
-
   def pieces
     spaces.each_with_object({}) do |s, acc|
       acc["#{s.file}#{s.rank}"] = s.piece if s.piece
     end
+  end
+
+  def try_move(move)
+    raise ArgumentError unless correctly_formatted?(move)
+    starting_space = move.split.first
+    target_space = move.split.last
+    starting_piece = pieces[starting_space]
+    target_piece = pieces[target_space]
+
+    move_piece move
+    yield
+
+    get_space(starting_space).piece = starting_piece
+    get_space(target_space).piece   = target_piece
   end
 
   private
