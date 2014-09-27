@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe Piece do
-  let(:rook)   { PieceFactory.create :black, :rook }
-  let(:bishop) { PieceFactory.create :black, :bishop }
-  let(:queen)  { PieceFactory.create :black, :queen }
-  let(:king)   { PieceFactory.create :black, :king }
-  let(:knight) { PieceFactory.create :black, :knight }
-  let(:pawn)   { PieceFactory.create :black, :pawn }
+  let(:rook)   { Piece.create :black, :rook }
+  let(:bishop) { Piece.create :black, :bishop }
+  let(:queen)  { Piece.create :black, :queen }
+  let(:king)   { Piece.create :black, :king }
+  let(:knight) { Piece.create :black, :knight }
+  let(:pawn)   { Piece.create :black, :pawn }
 
   it 'knows how to move' do
     expect(rook.directions).to include :north

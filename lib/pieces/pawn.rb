@@ -8,26 +8,18 @@ class Pawn < Piece
   end
 
   def limit(rank)
-    home_rank = if color == :white
-                  2
-                else
-                  7
-                end
-
-    if rank == home_rank
-      2
-      else
-      1
-    end
+    (on_home_rank?(rank)) ? 2 : 1
   end
 
   private
 
+  def on_home_rank?(rank)
+    home_rank = (color == :white) ? 2 : 7
+
+    rank == home_rank
+  end
+
   def pawn_directions
-    if color == :white
-      [:north]
-    else
-      [:south]
-    end
+    (color == :white) ? [:north] : [:south]
   end
 end

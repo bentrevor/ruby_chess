@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe ChessRules do
-  let(:white_rook)   { PieceFactory.create :white, :rook }
-  let(:white_king)   { PieceFactory.create :white, :king }
-  let(:black_king)   { PieceFactory.create :black, :king }
-  let(:black_pawn)   { PieceFactory.create :black, :pawn }
-  let(:white_pawn)   { PieceFactory.create :white, :pawn }
-  let(:white_bishop) { PieceFactory.create :white, :bishop }
+  let(:white_rook)   { Piece.create :white, :rook }
+  let(:white_king)   { Piece.create :white, :king }
+  let(:black_king)   { Piece.create :black, :king }
+  let(:black_pawn)   { Piece.create :black, :pawn }
+  let(:white_pawn)   { Piece.create :white, :pawn }
+  let(:white_bishop) { Piece.create :white, :bishop }
 
   let(:board) { ChessBoard.new({'d4' => white_rook}) }
 

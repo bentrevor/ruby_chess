@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe ChessBoard do
   let(:board) { ChessBoard.new }
-  let(:black_rook) { PieceFactory.create(:black, :rook) }
-  let(:white_bishop) { PieceFactory.create(:white, :bishop) }
-  let(:black_queen) { PieceFactory.create(:black, :queen) }
+  let(:black_rook) { Piece.create(:black, :rook) }
+  let(:white_bishop) { Piece.create(:white, :bishop) }
+  let(:black_queen) { Piece.create(:black, :queen) }
 
 
   it 'has 64 spaces' do
