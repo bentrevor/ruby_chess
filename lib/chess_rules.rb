@@ -57,120 +57,108 @@ class ChessRules
       spaces = []
       file = current_space[0]
       rank = current_space[1].to_i
-      moves_so_far = 0
+      moves_so_far = 1
       move_limit = moving_piece.limit(rank)
 
       case direction
       when :north
-        moves_so_far += 1
         rank += 1
-        until rank > 8 or moves_so_far > move_limit
+        until invalid?(rank, file, moves_so_far, move_limit)
           if target_piece = board.get_piece("#{file}#{rank}")
-            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
-            spaces << "#{file}#{rank}"
             moves_so_far += 1
-            rank += 1
+            spaces, rank, file = add_space(spaces, rank, file, {:rank_change => :inc,
+                                                                :file_change => :none})
           end
         end
       when :south
-        moves_so_far += 1
         rank -= 1
-        until rank < 1 or moves_so_far > move_limit
+        until invalid?(rank, file, moves_so_far, move_limit)
           if target_piece = board.get_piece("#{file}#{rank}")
-            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
-            spaces << "#{file}#{rank}"
             moves_so_far += 1
-            rank -= 1
+            spaces, rank, file = add_space(spaces, rank, file, {:rank_change => :dec,
+                                                                :file_change => :none})
           end
         end
       when :east
-        moves_so_far += 1
         file = incf(file)
-        until file > 'h' or moves_so_far > move_limit
+        until invalid?(rank, file, moves_so_far, move_limit)
           if target_piece = board.get_piece("#{file}#{rank}")
-            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
-            spaces << "#{file}#{rank}"
             moves_so_far += 1
-            file = incf(file)
+            spaces, rank, file = add_space(spaces, rank, file, {:rank_change => :none,
+                                                                :file_change => :inc})
           end
         end
       when :west
-        moves_so_far += 1
         file = decf(file)
-        until file < 'a' or moves_so_far > move_limit
+        until invalid?(rank, file, moves_so_far, move_limit)
           if target_piece = board.get_piece("#{file}#{rank}")
-            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
-            spaces << "#{file}#{rank}"
             moves_so_far += 1
-            file = decf(file)
+            spaces, rank, file = add_space(spaces, rank, file, {:rank_change => :none,
+                                                                :file_change => :dec})
           end
         end
       when :northeast
-        moves_so_far += 1
         rank += 1
         file = incf(file)
-        until file > 'h' or rank > 8 or moves_so_far > move_limit
+        until invalid?(rank, file, moves_so_far, move_limit)
           if target_piece = board.get_piece("#{file}#{rank}")
-            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
-            spaces << "#{file}#{rank}"
             moves_so_far += 1
-            rank += 1
-            file = incf(file)
+            spaces, rank, file = add_space(spaces, rank, file, {:rank_change => :inc,
+                                                                :file_change => :inc})
           end
         end
       when :northwest
-        moves_so_far += 1
         rank += 1
         file = decf(file)
-        until file < 'a' or rank > 8 or moves_so_far > move_limit
+        until invalid?(rank, file, moves_so_far, move_limit)
           if target_piece = board.get_piece("#{file}#{rank}")
-            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
-            spaces << "#{file}#{rank}"
             moves_so_far += 1
-            rank += 1
-            file = decf(file)
+            spaces, rank, file = add_space(spaces, rank, file, {:rank_change => :inc,
+                                                                :file_change => :dec})
           end
         end
       when :southeast
-        moves_so_far += 1
         rank -= 1
         file = incf(file)
-        until file > 'h' or rank < 1 or moves_so_far > move_limit
+        until invalid?(rank, file, moves_so_far, move_limit)
           if target_piece = board.get_piece("#{file}#{rank}")
-            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
-            spaces << "#{file}#{rank}"
             moves_so_far += 1
-            rank -= 1
-            file = incf(file)
+            spaces, rank, file = add_space(spaces, rank, file, {:rank_change => :dec,
+                                                                :file_change => :inc})
           end
         end
       when :southwest
-        moves_so_far += 1
         rank -= 1
         file = decf(file)
-        until file < 'a' or rank < 1 or moves_so_far > move_limit
+        until invalid?(rank, file, moves_so_far, move_limit)
           if target_piece = board.get_piece("#{file}#{rank}")
-            spaces = piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
+            piece_collision(moving_piece, target_piece, "#{file}#{rank}", spaces)
             break
           else
-            spaces << "#{file}#{rank}"
             moves_so_far += 1
-            rank -= 1
-            file = decf(file)
+            spaces, rank, file = add_space(spaces, rank, file, {:rank_change => :dec,
+                                                                :file_change => :dec})
           end
         end
       end
@@ -192,6 +180,29 @@ class ChessRules
 
     def decf(file)
       (file.ord - 1).chr
+    end
+
+    def add_space(spaces, rank, file, changes)
+      spaces << "#{file}#{rank}"
+      case changes[:rank_change]
+      when :inc
+        rank += 1
+      when :dec
+        rank -= 1
+      end
+
+      case changes[:file_change]
+      when :inc
+        file = incf(file)
+      when :dec
+        file = decf(file)
+      end
+
+      [spaces, rank, file]
+    end
+
+    def invalid?(rank, file, moves_so_far, move_limit)
+      rank > 8 or rank < 1 or file > 'h' or file < 'a' or moves_so_far > move_limit
     end
   end
 end
