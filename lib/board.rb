@@ -13,10 +13,15 @@ class ChessBoard
   end
 
   def move_piece(move)
+    raise ArgumentError unless correctly_formatted?(move)
     original_space = get_space(move.split.first)
 
     place_piece(original_space.piece, move.split.last)
     original_space.piece = nil
+  end
+
+  def correctly_formatted?(move)
+    move.length == 7 and move[3] == '-'
   end
 
   def place_piece(piece, space)

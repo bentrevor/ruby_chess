@@ -8,12 +8,6 @@ class FindMoves
         moves << remaining_spaces_for(board, direction, starting_space)
       end
 
-      strip_invalid(moves, starting_space)
-    end
-
-    def strip_invalid(moves, starting_space)
-      # moves.flatten!.each do |move|
-      # end
       moves.flatten
     end
 

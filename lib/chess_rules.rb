@@ -8,7 +8,10 @@ class ChessRules
 
       return false if piece.nil?
       return false if piece.color != current_color
-      return false unless FindMoves.call(board, starting_space).include? ending_space
+
+      moves = FindMoves.call(board, starting_space)
+      valid_moves = find_valid(moves, board, starting_space, current_color)
+      return false unless valid_moves.include? ending_space
 
       true
     end
@@ -18,7 +21,7 @@ class ChessRules
     end
 
     def in_check?(board, color)
-      king_space = find_king_space(board, color)
+      return unless king_space = find_king_space(board, color)
       other_color = [:white, :black].find { |c| c != color}
 
       all_moves_for(board, other_color).include?(king_space)
@@ -26,8 +29,8 @@ class ChessRules
 
     def find_king_space(board, color)
       board.pieces.find do |space, piece|
-        piece.color == color and piece.class == King
-      end[0]
+        return space if piece.color == color and piece.class == King
+      end
     end
 
     def all_moves_for(board, color)
@@ -38,6 +41,10 @@ class ChessRules
       moves = spaces_with_pieces.map do |space|
         FindMoves.call(board, space)
       end.flatten.uniq
+    end
+
+    def find_valid(target_spaces, board, starting_space, current_color)
+      target_spaces
     end
   end
 end

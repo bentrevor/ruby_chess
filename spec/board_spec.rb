@@ -29,11 +29,25 @@ describe ChessBoard do
     expect(board.get_piece('a8').color).to eq :black
   end
 
+  it 'raises an error if it gets the wrong format move' do
+    expect { board.move_piece('a1') }.to raise_error(ArgumentError)
+  end
+
   it 'can move a piece' do
     board.move_piece 'a2 - a4'
 
     expect(board.get_piece('a2')).to be nil
     expect(board.get_piece('a4')).to be_a Pawn
+  end
+
+  it 'can capture a piece' do
+    board = ChessBoard.new({ :a1 => black_rook,
+                             :a2 => white_bishop })
+
+    board.move_piece 'a1 - a2'
+
+    expect(board.get_piece('a1')).to be nil
+    expect(board.get_piece('a2')).to be_a Rook
   end
 
   it 'can place a piece' do
