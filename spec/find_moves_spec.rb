@@ -138,5 +138,13 @@ describe FindMoves do
       expect(FindMoves.call(board, 'd4')).to include 'b5'
       expect(FindMoves.call(board, 'd4')).not_to include 'b3'
     end
+
+    it 'strips target spaces with a rank of 10' do
+      # a validation expects rank and file each to be one digit
+
+      board.place_piece(black_knight, 'h8')
+      expect(FindMoves.call(board, 'h8')).not_to include 'g10'
+      expect(FindMoves.call(board, 'h8')).not_to include 'i10'
+    end
   end
 end

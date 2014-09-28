@@ -175,7 +175,9 @@ class FindMoves
       rank = starting_space[1].to_i
 
       l_moves(file, rank).select do |space|
-        !off_board?(space[0], space[1].to_i) and !colliding(board, starting_space, space)
+        space.length == 2 and
+          !off_board?(space[0], space[1].to_i) and
+          !colliding(board, starting_space, space)
       end
     end
 
