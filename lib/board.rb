@@ -88,7 +88,7 @@ class ChessBoard
     }[file]
   end
 
-  def piece_for(file, rank)
+  def initial_piece_for(file, rank)
     color = color_for rank
 
     if rank == 1 or rank == 8
@@ -104,7 +104,7 @@ class ChessBoard
     file = file_for index
     rank = rank_for index
 
-    Space.new(file, rank, piece_for(file, rank))
+    Space.new(file, rank, initial_piece_for(file, rank))
   end
 
   def file_for(index)
