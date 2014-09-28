@@ -22,24 +22,24 @@ describe ChessRules do
     end
 
     it 'is false when there is no piece in original space' do
-      expect(ChessRules.valid_move?('a4 - a5', board, player1)).to eq false
+      expect { ChessRules.valid_move?('a4 - a5', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
     end
 
     it 'is false when it tries to move the wrong color piece' do
-      expect(ChessRules.valid_move?('d4 - d5', board, player2)).to eq false
+      expect { ChessRules.valid_move?('d4 - d5', board, player2) }.to raise_error(ChessRules::InvalidMoveError)
     end
 
     it 'is false when it tries to make an illegal move' do
       expect(ChessRules.valid_move?('d4 - d8', board, player1)).to eq true
       expect(ChessRules.valid_move?('d4 - h4', board, player1)).to eq true
-      expect(ChessRules.valid_move?('d4 - e5', board, player1)).to eq false
+      expect { ChessRules.valid_move?('d4 - e5', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
     end
 
     it "doesn't let you move into check" do
       board.place_piece(black_king, 'c3')
 
       %w[b4 c4 d3 d2].each do |invalid_move|
-        expect(ChessRules.valid_move?("c3 - #{invalid_move}", board, player2)).to eq false
+        expect { ChessRules.valid_move?("c3 - #{invalid_move}", board, player2) }.to raise_error(ChessRules::InvalidMoveError)
       end
 
       %w[b3 b2 c2 d4].each do |valid_move|
@@ -47,18 +47,18 @@ describe ChessRules do
       end
 
       board.place_piece(white_bishop, 'e5')
-      expect(ChessRules.valid_move?("c3 - d4", board, player2)).to eq false
+      expect { ChessRules.valid_move?("c3 - d4", board, player2) }.to raise_error(ChessRules::InvalidMoveError)
     end
 
     it 'forces you to move out of check' do
       board.place_piece(black_king, 'c4')
       board.place_piece(black_rook, 'e4')
 
-      expect(ChessRules.valid_move?('e4 - e5', board, player2)).to eq false
+      expect { ChessRules.valid_move?('e4 - e5', board, player2) }.to raise_error(ChessRules::InvalidMoveError)
       expect(ChessRules.valid_move?('e4 - d4', board, player2)).to eq true
 
-      expect(ChessRules.valid_move?('c4 - b4', board, player2)).to eq false
-      expect(ChessRules.valid_move?('c4 - d5', board, player2)).to eq false
+      expect { ChessRules.valid_move?('c4 - b4', board, player2) }.to raise_error(ChessRules::InvalidMoveError)
+      expect { ChessRules.valid_move?('c4 - d5', board, player2) }.to raise_error(ChessRules::InvalidMoveError)
       expect(ChessRules.valid_move?('c4 - c5', board, player2)).to eq true
       expect(ChessRules.valid_move?('c4 - d4', board, player2)).to eq true
     end
@@ -89,10 +89,10 @@ describe ChessRules do
         board.place_piece(white_bishop, 'c8')
         board.place_piece(white_bishop, 'g8')
 
-        expect(ChessRules.valid_move?('e1 - c1', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e1 - g1', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e8 - c8', board, player2)).to eq false
-        expect(ChessRules.valid_move?('e8 - g8', board, player2)).to eq false
+        expect { ChessRules.valid_move?('e1 - c1', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e1 - g1', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e8 - c8', board, player2) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e8 - g8', board, player2) }.to raise_error(ChessRules::InvalidMoveError)
       end
 
       specify "a player can't castle if they have moved their king or rook" do
@@ -101,30 +101,30 @@ describe ChessRules do
         player2.can_castle_left  = false
         player2.can_castle_right = false
 
-        expect(ChessRules.valid_move?('e1 - c1', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e1 - g1', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e8 - c8', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e8 - g8', board, player1)).to eq false
+        expect { ChessRules.valid_move?('e1 - c1', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e1 - g1', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e8 - c8', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e8 - g8', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
       end
 
       specify "a player can't castle out of check" do
         board.place_piece(white_bishop, 'a4')
         board.place_piece(black_bishop, 'a5')
 
-        expect(ChessRules.valid_move?('e1 - c1', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e1 - g1', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e8 - c8', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e8 - g8', board, player1)).to eq false
+        expect { ChessRules.valid_move?('e1 - c1', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e1 - g1', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e8 - c8', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e8 - g8', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
       end
 
       specify "a player can't castle through check" do
         board.place_piece(white_bishop, 'e7')
         board.place_piece(black_knight, 'e3')
 
-        expect(ChessRules.valid_move?('e1 - c1', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e1 - g1', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e8 - c8', board, player1)).to eq false
-        expect(ChessRules.valid_move?('e8 - g8', board, player1)).to eq false
+        expect { ChessRules.valid_move?('e1 - c1', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e1 - g1', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e8 - c8', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
+        expect { ChessRules.valid_move?('e8 - g8', board, player1) }.to raise_error(ChessRules::InvalidMoveError)
       end
     end
   end

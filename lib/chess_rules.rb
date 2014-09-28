@@ -6,18 +6,21 @@ class ChessRules
       target_space = move.split.last
       piece = board.get_space(starting_space).piece
 
-      return false if piece.nil?
-      return false if piece.color != current_color
+      raise InvalidMoveError.new("Invalid move:\nThere is no piece at #{starting_space}.") if piece.nil?
+      raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != current_color
 
       moves = FindMoves.call(board, starting_space)
       valid_moves = find_valid(moves, board, starting_space, current_player)
-      return false unless valid_moves.include? target_space
+      raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless valid_moves.include? target_space
 
       true
     end
 
     def game_over?(board)
       false
+    end
+
+    def winner(board)
     end
 
     def in_check?(board, color)
@@ -135,6 +138,14 @@ class ChessRules
       else
         castle_spaces_for current_player, board
       end
+    end
+  end
+
+  class InvalidMoveError < StandardError
+    attr_accessor :message
+
+    def initialize(msg)
+      self.message = msg
     end
   end
 end

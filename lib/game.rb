@@ -17,18 +17,20 @@ class Game
       next_turn
     end
 
-    show_winner_dialogue
+    show_winner_dialogue(board)
   end
 
   def next_turn
     writer.show_board board
     move = current_player.get_move
 
-    if rules.valid_move?(move, board, current_player)
-      board.move_piece(move)
-      toggle_players
-    else
-      writer.show "invalid move"
+    begin
+      if rules.valid_move?(move, board, current_player)
+        board.move_piece(move)
+        toggle_players
+      end
+    rescue rules::InvalidMoveError => e
+      writer.flash_message = e.message
     end
   end
 
@@ -38,8 +40,8 @@ class Game
     self.current_player, self.other_player = self.other_player, self.current_player
   end
 
-  def show_winner_dialogue
-    if rules.winner
+  def show_winner_dialogue(board)
+    if rules.winner(board)
       writer.show "#{rules.winner.capitalize} wins."
     else
       writer.show 'Tie game.'

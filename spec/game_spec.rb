@@ -1,13 +1,14 @@
 require 'spec_helper'
 
 describe Game do
-  let(:first_move) { 'a1 - a2' }
-  let(:second_move) { 'b1 - b2' }
-  let(:player1) { double 'human player', :get_move => first_move, :color => :white }
-  let(:player2) { double 'computer player', :get_move => second_move, :color => :black }
-  let(:rules)   { double 'game rules', :game_over? => true, :winner => nil, :valid_move? => true }
-  let(:writer)  { double 'writer', :show => nil, :show_board => nil }
-  let(:board)   { double 'board', :spaces => 'spaces', :move_piece => nil }
+  let(:first_move) { 'e2 - e4' }
+  let(:second_move) { 'e7 - e5' }
+  let(:player1) { instance_double 'Player', :get_move => first_move, :color => :white }
+  let(:player2) { instance_double 'Player', :get_move => second_move, :color => :black }
+  let(:rules)   { ChessRules }
+  let(:writer)  { class_double 'ConsoleWriter', :show => nil, :show_board => nil }
+  let(:board)   { instance_double 'ChessBoard', :spaces => 'spaces', :move_piece => nil }
+  let(:board)   { ChessBoard.new }
   let(:game)    { Game.new(player1, player2, rules, writer, board) }
 
   before :each do
@@ -36,14 +37,21 @@ describe Game do
   end
 
   it 'makes a move in the board each turn' do
-    expect(board).to receive(:move_piece).with(first_move)
+    expect(board).to receive(:move_piece).at_least(2).times
     game.next_turn
-    expect(board).to receive(:move_piece).with(second_move)
     game.next_turn
   end
 
   it 'only makes a valid move' do
     expect(rules).to receive(:valid_move?).with(first_move, board, player1).and_return false
+    expect(board).not_to receive(:move_piece)
+
+    game.next_turn
+  end
+
+  it 'shows an invalid move message when a move is invalid' do
+    expect(rules).to receive(:valid_move?).and_raise(ChessRules::InvalidMoveError.new('msg'))
+    expect(writer).to receive(:flash_message=).with 'msg'
     expect(board).not_to receive(:move_piece)
 
     game.next_turn
@@ -74,23 +82,26 @@ describe Game do
   end
 
   it 'checks for game over after each turn' do
-    expect(rules).to receive(:game_over?).with(board)
+    expect(rules).to receive(:game_over?).with(board).and_return false, false, true
     game.start
   end
 
   it 'can print out a tie game message' do
+    expect(rules).to receive(:game_over?).with(board).and_return false, false, true
     expect(writer).to receive(:show).with('Tie game.')
 
     game.start
   end
 
   it 'prints out the board each turn' do
+    expect(rules).to receive(:game_over?).with(board).and_return false, false, true
     expect(writer).to receive(:show_board).with(board)
 
-    game.next_turn
+    game.start
   end
 
   it "prints out the winner's name" do
+    expect(rules).to receive(:game_over?).with(board).and_return false, false, true
     allow(rules).to receive(:winner).and_return :black
     expect(writer).to receive(:show).with('Black wins.')
 

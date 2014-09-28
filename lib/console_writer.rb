@@ -1,11 +1,15 @@
 class ConsoleWriter
   class << self
+    attr_accessor :flash_message
+
     def show(message)
       $stdout.puts message
     end
 
     def show_board(board)
       Kernel.system "clear"
+      show(flash_message || "\n\n")
+      self.flash_message = "\n\n"
       show(printable(board.spaces))
     end
 
