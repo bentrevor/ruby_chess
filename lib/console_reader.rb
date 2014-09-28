@@ -1,6 +1,8 @@
+require 'readline'
+
 class ConsoleReader
   def self.get_move
-    input = $stdin.gets.chomp
+    input = Readline.readline("\n--> ", true)
     input
   end
 end

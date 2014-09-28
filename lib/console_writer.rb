@@ -49,7 +49,7 @@ class ConsoleWriter
           "black p" => "\u265F",
         }["#{piece.color} #{piece.abbrev}"].encode("utf-8")
       else
-        " "
+        "\u2610"
       end
     end
   end

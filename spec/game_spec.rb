@@ -6,7 +6,7 @@ describe Game do
   let(:player1) { instance_double 'Player', :get_move => first_move, :color => :white }
   let(:player2) { instance_double 'Player', :get_move => second_move, :color => :black }
   let(:rules)   { ChessRules }
-  let(:writer)  { class_double 'ConsoleWriter', :show => nil, :show_board => nil }
+  let(:writer)  { class_double 'ConsoleWriter', :show => nil, :show_board => nil, :flash_message= => nil }
   let(:board)   { instance_double 'ChessBoard', :spaces => 'spaces', :move_piece => nil }
   let(:board)   { ChessBoard.new }
   let(:game)    { Game.new(player1, player2, rules, writer, board) }
