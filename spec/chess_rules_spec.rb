@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe ChessRules do
-  let(:white_bishop) { Piece.create :black, :bishop }
+  let(:black_bishop) { Piece.create :black, :bishop }
   let(:black_king)   { Piece.create :black, :king }
+  let(:black_knight) { Piece.create :black, :knight }
   let(:black_pawn)   { Piece.create :black, :pawn }
   let(:black_rook)   { Piece.create :black, :rook }
   let(:white_bishop) { Piece.create :white, :bishop }
@@ -65,26 +66,66 @@ describe ChessRules do
     describe 'castling:' do
       let(:board) { ChessBoard.new({ 'a1' => white_rook,
                                      'h1' => white_rook,
-                                     'e1' => white_king }) }
+                                     'e1' => white_king,
+
+                                     'a8' => black_rook,
+                                     'h8' => black_rook,
+                                     'e8' => black_king }) }
 
       specify 'a player can castle when no pieces are in the way' do
         expect(ChessRules.valid_move?('e1 - c1', board, player1)).to eq true
+        expect(ChessRules.valid_move?('e8 - c8', board, player2)).to eq true
 
         board.place_piece(white_king, 'e1')
+        board.place_piece(black_king, 'e8')
+
         expect(ChessRules.valid_move?('e1 - g1', board, player1)).to eq true
+        expect(ChessRules.valid_move?('e8 - g8', board, player2)).to eq true
       end
 
       specify "a player can't castle if there are pieces in the way" do
         board.place_piece(white_bishop, 'b1')
         board.place_piece(white_bishop, 'f1')
+        board.place_piece(white_bishop, 'c8')
+        board.place_piece(white_bishop, 'g8')
 
         expect(ChessRules.valid_move?('e1 - c1', board, player1)).to eq false
         expect(ChessRules.valid_move?('e1 - g1', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e8 - c8', board, player2)).to eq false
+        expect(ChessRules.valid_move?('e8 - g8', board, player2)).to eq false
       end
 
-      specify "a player can't castle if they have moved their king or rook"
-      specify "a player can't castle out of check"
-      specify "a player can't castle through check"
+      specify "a player can't castle if they have moved their king or rook" do
+        player1.can_castle_left  = false
+        player1.can_castle_right = false
+        player2.can_castle_left  = false
+        player2.can_castle_right = false
+
+        expect(ChessRules.valid_move?('e1 - c1', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e1 - g1', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e8 - c8', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e8 - g8', board, player1)).to eq false
+      end
+
+      specify "a player can't castle out of check" do
+        board.place_piece(white_bishop, 'a4')
+        board.place_piece(black_bishop, 'a5')
+
+        expect(ChessRules.valid_move?('e1 - c1', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e1 - g1', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e8 - c8', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e8 - g8', board, player1)).to eq false
+      end
+
+      specify "a player can't castle through check" do
+        board.place_piece(white_bishop, 'e7')
+        board.place_piece(black_knight, 'e3')
+
+        expect(ChessRules.valid_move?('e1 - c1', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e1 - g1', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e8 - c8', board, player1)).to eq false
+        expect(ChessRules.valid_move?('e8 - g8', board, player1)).to eq false
+      end
     end
   end
 
