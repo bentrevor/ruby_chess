@@ -131,6 +131,12 @@ describe FindMoves do
     it 'knows where a knight can move' do
       board.place_piece(black_knight, 'd4')
       expect(FindMoves.call(board, 'd4').sort).to eq %w[b3 b5 c2 c6 e2 e6 f3 f5]
+
+      board.place_piece(black_pawn, 'b3')
+      board.place_piece(white_pawn, 'b5')
+
+      expect(FindMoves.call(board, 'd4')).to include 'b5'
+      expect(FindMoves.call(board, 'd4')).not_to include 'b3'
     end
   end
 end

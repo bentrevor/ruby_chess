@@ -12,7 +12,7 @@ describe ChessBoard do
   end
 
   it 'can start with only some pieces' do
-    board = ChessBoard.new({:a1 => black_rook })
+    board = ChessBoard.new({ :a1 => black_rook })
     expect(board.pieces['a1']).to be_a Rook
     expect(board.pieces['a1'].color).to eq :black
   end
@@ -57,13 +57,16 @@ describe ChessBoard do
   end
 
   it 'can try/undo a move' do
-    board.try_move('a2 - a4') do
-      expect(board.pieces['a2']).to be_nil
-      expect(board.pieces['a4']).to be_a Pawn
+    board = ChessBoard.new({ :a1 => black_rook,
+                             :a2 => white_bishop })
+
+    board.try_move('a1 - a2') do
+      expect(board.pieces['a1']).to be_nil
+      expect(board.pieces['a2']).to be_a Rook
     end
 
-    expect(board.pieces['a2']).to be_a Pawn
-    expect(board.pieces['a4']).to be_nil
+    expect(board.pieces['a1']).to be_a Rook
+    expect(board.pieces['a2']).to be_a Bishop
   end
 
   it 'lists all pieces' do

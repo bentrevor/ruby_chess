@@ -170,12 +170,23 @@ class FindMoves
       file < 'a' or file > 'h' or rank < 1 or rank > 8
     end
 
-    def knight_spaces(board, space)
-      file = space[0]
-      rank = space[1].to_i
+    def knight_spaces(board, starting_space)
+      file = starting_space[0]
+      rank = starting_space[1].to_i
 
       l_moves(file, rank).select do |space|
-        !off_board?(space[0], space[1].to_i)
+        !off_board?(space[0], space[1].to_i) and !colliding(board, starting_space, space)
+      end
+    end
+
+    def colliding(board, starting_space, target_space)
+      starting_piece = board.pieces[starting_space]
+      target_piece = board.pieces[target_space]
+
+      if target_piece and starting_piece and target_piece.color == starting_piece.color
+        true
+      else
+        false
       end
     end
 
