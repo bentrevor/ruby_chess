@@ -24,7 +24,7 @@ class Game
     writer.show_board board
     move = current_player.get_move
 
-    if rules.valid_move?(move, board, current_player.color)
+    if rules.valid_move?(move, board, current_player)
       board.move_piece(move)
       toggle_players
     else

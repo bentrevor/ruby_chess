@@ -43,14 +43,14 @@ describe Game do
   end
 
   it 'only makes a valid move' do
-    expect(rules).to receive(:valid_move?).with(first_move, board, player1.color).and_return false
+    expect(rules).to receive(:valid_move?).with(first_move, board, player1).and_return false
     expect(board).not_to receive(:move_piece)
 
     game.next_turn
   end
 
   it 'only toggles players after a valid move' do
-    expect(rules).to receive(:valid_move?).with(first_move, board, player1.color).and_return false
+    expect(rules).to receive(:valid_move?).with(first_move, board, player1).and_return false
     game.next_turn
 
     expect(game.current_player).to eq player1
