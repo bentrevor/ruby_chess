@@ -1,4 +1,4 @@
-class CastleMoves
+class CastlingMoves
   class << self
     def for(board, starting_space, current_player, rules)
       @rules = rules
@@ -29,7 +29,7 @@ class CastleMoves
       spaces = []
 
       spaces << "c#{home_rank(player.color)}" if can_castle_left?(board, player)
-      spaces << "g#{home_rank(player.color)}" if can_castle_left?(board, player)
+      spaces << "g#{home_rank(player.color)}" if can_castle_right?(board, player)
 
       spaces
     end

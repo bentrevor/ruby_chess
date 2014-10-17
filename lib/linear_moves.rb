@@ -1,4 +1,4 @@
-class FindMoves
+class LinearMoves
   class << self
     def call(board, starting_space)
       moves = []
@@ -10,6 +10,8 @@ class FindMoves
 
       moves.flatten
     end
+
+    private
 
     def remaining_spaces_for(board, direction, current_space)
       moving_piece = board.pieces[current_space]
