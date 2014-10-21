@@ -11,11 +11,15 @@ class ChessRules
       raise InvalidMoveError.new("Invalid move:\nThere is no piece at #{starting_space}.") if piece.nil?
       raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != current_color
 
-      moves = LinearMoves.call(board, starting_space) + KnightMoves.by_bob_seger(board, starting_space) + CastlingMoves.for(board, current_player, self)
-      valid_moves = find_valid(moves, board, starting_space, current_player)
-      raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless valid_moves.include? target_space
+      moves_for_space = all_moves(board, starting_space, current_player)
+      raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless moves_for_space.include?(target_space)
+      raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless legal_move?(target_space, board, starting_space)
 
       true
+    end
+
+    def all_moves(board, starting_space, current_player)
+      LinearMoves.call(board, starting_space) + KnightMoves.by_bob_seger(board, starting_space) + CastlingMoves.for(board, current_player, self)
     end
 
     def game_over?(board)
@@ -59,18 +63,17 @@ class ChessRules
       end.flatten.uniq
     end
 
-    def find_valid(target_spaces, board, starting_space, current_player)
-      valid_moves = []
+    def legal_move?(target_space, board, starting_space)
+      valid_move = true
+      color = board.pieces[starting_space].color
 
-      target_spaces.each do |new_space|
-        board.try_move("#{starting_space} - #{new_space}") do
-          if !in_check?(board, current_player.color)
-            valid_moves << new_space
-          end
+      board.try_move("#{starting_space} - #{target_space}") do
+        if in_check?(board, color)
+          valid_move = false
         end
       end
 
-      valid_moves
+      valid_move
     end
   end
 

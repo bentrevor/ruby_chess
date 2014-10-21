@@ -70,4 +70,10 @@ describe CastlingMoves do
     expect(CastlingMoves.for(board, player1, ChessRules).sort).to eq []
     expect(CastlingMoves.for(board, player2, ChessRules).sort).to eq []
   end
+
+  specify "a player can't castle into check" do
+    board.place_piece(black_rook, 'g3')
+
+    expect(CastlingMoves.for(board, player1, ChessRules)).to eq ['c1']
+  end
 end

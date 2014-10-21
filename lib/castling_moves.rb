@@ -3,31 +3,21 @@ class CastlingMoves
     def for(board, current_player, rules)
       @rules = rules
       @starting_space = (current_player.color == :white) ? 'e1' : 'e8'
-      # binding.pry
-      if cant_castle?(board, current_player)
-        []
+      if can_castle?(board, current_player)
+        castle_spaces_for(board, current_player)
       else
-        castle_spaces_for(current_player, board)
+        []
       end
     end
 
     private
 
-    def cant_castle?(board, current_player)
-      board.pieces[@starting_space].class != King or
-        wrong_color?(@starting_space, current_player.color) or
-        @rules.in_check?(board, current_player.color)
+    def can_castle?(board, current_player)
+      board.pieces[@starting_space].is_a?(King) &&
+        !@rules.in_check?(board, current_player.color)
     end
 
-    def wrong_color?(space, color)
-      if color == :white
-        space != 'e1'
-      elsif color == :black
-        space != 'e8'
-      end
-    end
-
-    def castle_spaces_for(player, board)
+    def castle_spaces_for(board, player)
       spaces = []
 
       spaces << "c#{home_rank(player.color)}" if can_castle_left?(board, player)
@@ -43,9 +33,8 @@ class CastlingMoves
                  ['b8', 'c8', 'd8']
                end
 
-      player.can_castle_left and
-        all_empty_spaces?(board, spaces) and
-        not_castling_through_check?(board, player, 'd')
+      player.can_castle_left &&
+        safe_castle_spaces?(board, player, spaces)
     end
 
     def can_castle_right?(board, player)
@@ -55,25 +44,33 @@ class CastlingMoves
                  ['f8', 'g8']
                end
 
-      player.can_castle_right and
-        all_empty_spaces?(board, spaces) and
-        not_castling_through_check?(board, player, 'f')
+      player.can_castle_right &&
+        safe_castle_spaces?(board, player, spaces)
+    end
+
+    def safe_castle_spaces?(board, player, spaces)
+      all_empty_spaces?(board, spaces) && !castling_through_check?(board, player, spaces)
+    end
+
+    def castling_through_check?(board, player, spaces)
+      castling_through_check = false
+      color = player.color
+      rank = home_rank(color)
+
+      target_spaces = spaces.reject{ |s| s.include?('b') }
+
+      target_spaces.each do |target_space|
+        board.try_move("#{@starting_space} - #{target_space}") do
+          castling_through_check = true if @rules.in_check?(board, color)
+        end
+      end
+
+      castling_through_check
     end
 
     def all_empty_spaces?(board, spaces)
       spaces.each do |space|
         return false if board.pieces[space]
-      end
-      true
-    end
-
-    def not_castling_through_check?(board, player, target_file)
-      color = player.color
-
-      target_space = "#{target_file}#{home_rank(color)}"
-
-      board.try_move("#{@starting_space} - #{target_space}") do
-        return false if @rules.in_check?(board, color)
       end
       true
     end
