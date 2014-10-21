@@ -1,6 +1,8 @@
 class LinearMoves
   class << self
     def call(board, starting_space)
+      return [] if board.pieces[starting_space].class == Knight
+
       moves = []
       piece = board.pieces[starting_space]
 
@@ -15,7 +17,6 @@ class LinearMoves
 
     def remaining_spaces_for(board, direction, current_space)
       moving_piece = board.pieces[current_space]
-      return KnightMoves.by_bob_seger(board, current_space) if moving_piece.class == Knight
 
       spaces = []
       file = current_space[0]

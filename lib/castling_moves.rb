@@ -1,19 +1,21 @@
 class CastlingMoves
   class << self
-    def for(board, starting_space, current_player, rules)
+    def for(board, current_player, rules)
       @rules = rules
-      if cant_castle?(board, starting_space, current_player)
+      @starting_space = (current_player.color == :white) ? 'e1' : 'e8'
+      # binding.pry
+      if cant_castle?(board, current_player)
         []
       else
-        castle_spaces_for current_player, board
+        castle_spaces_for(current_player, board)
       end
     end
 
     private
 
-    def cant_castle?(board, starting_space, current_player)
-      board.pieces[starting_space].class != King or
-        wrong_color?(starting_space, current_player.color) or
+    def cant_castle?(board, current_player)
+      board.pieces[@starting_space].class != King or
+        wrong_color?(@starting_space, current_player.color) or
         @rules.in_check?(board, current_player.color)
     end
 
@@ -68,10 +70,9 @@ class CastlingMoves
     def not_castling_through_check?(board, player, target_file)
       color = player.color
 
-      starting_space = (color == :white) ? 'e1' : 'e8'
       target_space = "#{target_file}#{home_rank(color)}"
 
-      board.try_move("#{starting_space} - #{target_space}") do
+      board.try_move("#{@starting_space} - #{target_space}") do
         return false if @rules.in_check?(board, color)
       end
       true

@@ -11,7 +11,7 @@ class ChessRules
       raise InvalidMoveError.new("Invalid move:\nThere is no piece at #{starting_space}.") if piece.nil?
       raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != current_color
 
-      moves = LinearMoves.call(board, starting_space)
+      moves = LinearMoves.call(board, starting_space) + KnightMoves.by_bob_seger(board, starting_space) + CastlingMoves.for(board, current_player, self)
       valid_moves = find_valid(moves, board, starting_space, current_player)
       raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless valid_moves.include? target_space
 
@@ -27,7 +27,7 @@ class ChessRules
 
     def in_check?(board, color)
       return unless king_space = find_king_space(board, color)
-      other_color = [:white, :black].find { |c| c != color}
+      other_color = (color == :white) ? :black : :white
 
       all_moves_for(board, other_color).include?(king_space)
     end
@@ -55,7 +55,7 @@ class ChessRules
       end.keys
 
       moves = spaces_with_pieces.map do |space|
-        LinearMoves.call(board, space)
+        LinearMoves.call(board, space) + KnightMoves.by_bob_seger(board, space)
       end.flatten.uniq
     end
 
@@ -70,7 +70,7 @@ class ChessRules
         end
       end
 
-      valid_moves + CastlingMoves.for(board, starting_space, current_player, self)
+      valid_moves
     end
   end
 

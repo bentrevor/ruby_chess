@@ -24,4 +24,9 @@ describe KnightMoves do
     expect(KnightMoves.by_bob_seger(board, 'h8')).not_to include 'g10'
     expect(KnightMoves.by_bob_seger(board, 'h8')).not_to include 'i10'
   end
+
+  it 'only returns spaces when a knight is in the starting space' do
+    board.place_piece(black_pawn, 'h8')
+    expect(KnightMoves.by_bob_seger(board, 'h8')).to eq []
+  end
 end

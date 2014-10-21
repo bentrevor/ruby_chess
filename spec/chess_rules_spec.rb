@@ -72,5 +72,12 @@ describe ChessRules do
       expect(ChessRules.in_check?(board, :white)).to be false
       expect(ChessRules.in_check?(board, :black)).to be true
     end
+
+    specify 'a knight can put a king in check' do
+      board.place_piece(white_king, 'e8')
+      board.place_piece(black_knight, 'f6')
+
+      expect(ChessRules.in_check?(board, :white)).to be true
+    end
   end
 end

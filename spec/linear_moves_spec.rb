@@ -127,10 +127,8 @@ describe LinearMoves do
     end
   end
 
-  describe 'knight moves' do
-    it 'knows where a knight can move' do
-      board.place_piece(black_knight, 'd4')
-      expect(LinearMoves.call(board, 'd4').sort).to eq %w[b3 b5 c2 c6 e2 e6 f3 f5]
-    end
+  it 'returns an empty list for a knight' do
+    board.place_piece(black_knight, 'd4')
+    expect(LinearMoves.call(board, 'd4')).to eq []
   end
 end

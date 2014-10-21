@@ -1,6 +1,8 @@
 class KnightMoves
   class << self
     def by_bob_seger(board, starting_space)
+      return [] unless board.pieces[starting_space].is_a? Knight
+
       file = starting_space[0]
       rank = starting_space[1].to_i
 

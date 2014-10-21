@@ -3,8 +3,10 @@ require 'spec_helper'
 describe Game do
   let(:first_move) { 'e2 - e4' }
   let(:second_move) { 'e7 - e5' }
-  let(:player1) { instance_double 'Player', :get_move => first_move, :color => :white }
-  let(:player2) { instance_double 'Player', :get_move => second_move, :color => :black }
+  let(:decider1) { double 'move decider 1', :get_move => first_move }
+  let(:decider2) { double 'move decider 2', :get_move => second_move }
+  let(:player1) { Player.new(decider1, :white) }
+  let(:player2) { Player.new(decider2, :black) }
   let(:rules)   { ChessRules }
   let(:writer)  { class_double 'ConsoleWriter', :show => nil, :show_board => nil, :flash_message= => nil }
   let(:board)   { instance_double 'ChessBoard', :spaces => 'spaces', :move_piece => nil }
@@ -74,8 +76,8 @@ describe Game do
   end
 
   it 'gets a move from the players' do
-    expect(player1).to receive(:get_move)
-    expect(player2).to receive(:get_move)
+    expect(player1).to receive(:get_move).and_return first_move
+    expect(player2).to receive(:get_move).and_return second_move
     expect(rules).to receive(:game_over?).with(board).and_return false, false, true
 
     game.start
