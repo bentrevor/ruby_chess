@@ -1,4 +1,6 @@
 class LinearMoves
+  include ChessBoardHelpers
+
   class << self
     def call(board, starting_space)
       return [] if board.pieces[starting_space].class == Knight
@@ -22,18 +24,20 @@ class LinearMoves
       current_space = spaces.last || starting_space
       file = current_space[0]
       rank = current_space[1].to_i
+      inc_file = ChessBoardHelpers.inc_file(file)
+      dec_file = ChessBoardHelpers.dec_file(file)
 
       return spaces if spaces.length >= moving_piece.limit(starting_rank)
 
       next_space = {
         :north     => "#{file}#{rank + 1}",
-        :east      => "#{incf(file)}#{rank}",
+        :east      => "#{inc_file}#{rank}",
         :south     => "#{file}#{rank - 1}",
-        :west      => "#{decf(file)}#{rank}",
-        :northeast => "#{incf(file)}#{rank + 1}",
-        :southeast => "#{incf(file)}#{rank - 1}",
-        :southwest => "#{decf(file)}#{rank - 1}",
-        :northwest => "#{decf(file)}#{rank + 1}"
+        :west      => "#{dec_file}#{rank}",
+        :northeast => "#{inc_file}#{rank + 1}",
+        :southeast => "#{inc_file}#{rank - 1}",
+        :southwest => "#{dec_file}#{rank - 1}",
+        :northwest => "#{dec_file}#{rank + 1}"
       }[direction]
 
       piece_in_next_space = board.pieces[next_space]

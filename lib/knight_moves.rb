@@ -1,31 +1,41 @@
 class KnightMoves
+  include ChessBoardHelpers
+
   class << self
     def by_bob_seger(board, starting_space)
       return [] unless board.pieces[starting_space].is_a? Knight
 
-      file = starting_space[0]
-      rank = starting_space[1].to_i
+      @file = starting_space[0]
+      @rank = starting_space[1].to_i
 
-      l_moves(file, rank).select do |space|
+      l_moves.select do |space|
         space.length == 2 and
           !off_board?(space[0], space[1].to_i) and
           !colliding(board, starting_space, space)
       end
     end
 
-    def l_moves(file, rank)
-      ["#{decf(decf(file))}#{rank - 1}", "#{decf(decf(file))}#{rank + 1}",
-       "#{decf(file)}#{rank - 2}",       "#{decf(file)}#{rank + 2}",
-       "#{incf(incf(file))}#{rank - 1}", "#{incf(incf(file))}#{rank + 1}",
-       "#{incf(file)}#{rank - 2}",       "#{incf(file)}#{rank + 2}"]
+    def l_moves
+      ["#{dec_dec_file}#{@rank - 1}", "#{dec_dec_file}#{@rank + 1}",
+       "#{dec_file}#{@rank - 2}",     "#{dec_file}#{@rank + 2}",
+       "#{inc_inc_file}#{@rank - 1}", "#{inc_inc_file}#{@rank + 1}",
+       "#{inc_file}#{@rank - 2}",     "#{inc_file}#{@rank + 2}"]
     end
 
-    def incf(file)
-      (file.ord + 1).chr
+    def inc_file
+      ChessBoardHelpers.inc_file(@file)
     end
 
-    def decf(file)
-      (file.ord - 1).chr
+    def inc_inc_file
+      ChessBoardHelpers.inc_file(ChessBoardHelpers.inc_file(@file))
+    end
+
+    def dec_file
+      ChessBoardHelpers.dec_file(@file)
+    end
+
+    def dec_dec_file
+      ChessBoardHelpers.dec_file(ChessBoardHelpers.dec_file(@file))
     end
 
     def off_board?(file, rank)
