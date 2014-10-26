@@ -73,6 +73,7 @@ describe ChessRules do
       expect(ChessRules.in_check?(board, :black)).to be true
     end
 
+    # regression specs
     specify 'a knight can put a king in check' do
       board.place_piece(white_king, 'e8')
       board.place_piece(black_knight, 'f6')

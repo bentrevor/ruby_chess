@@ -22,20 +22,12 @@ describe CastlingMoves do
   let(:player1) { Player.new(double, :white) }
   let(:player2) { Player.new(double, :black) }
 
-  specify 'a player can castle when no pieces are in the way' do
+  it 'lets a player castle when no pieces are in the way' do
     expect(CastlingMoves.for(board, player1, ChessRules).sort).to eq ['c1', 'g1']
     expect(CastlingMoves.for(board, player2, ChessRules).sort).to eq ['c8', 'g8']
   end
 
-  specify 'a player can sometimes only castle to one side' do
-    player1.can_castle_left = false
-    player2.can_castle_right = false
-
-    expect(CastlingMoves.for(board, player1, ChessRules).sort).to eq ['g1']
-    expect(CastlingMoves.for(board, player2, ChessRules).sort).to eq ['c8']
-  end
-
-  specify "a player can't castle if there are pieces in the way" do
+  it "doesn't let a player castle if there are pieces in the way" do
     board.place_piece(white_bishop, 'b1')
     board.place_piece(white_bishop, 'f1')
     board.place_piece(white_bishop, 'c8')
@@ -45,7 +37,7 @@ describe CastlingMoves do
     expect(CastlingMoves.for(board, player2, ChessRules).sort).to eq []
   end
 
-  specify "a player can't castle if they have moved their king or rook" do
+  it "doesn't let a player castle if they have moved their king or rook" do
     player1.can_castle_left  = false
     player1.can_castle_right = false
     player2.can_castle_left  = false
@@ -55,7 +47,7 @@ describe CastlingMoves do
     expect(CastlingMoves.for(board, player2, ChessRules).sort).to eq []
   end
 
-  specify "a player can't castle out of check" do
+  it "doesn't let a player castle out of check" do
     board.place_piece(white_bishop, 'a4')
     board.place_piece(black_bishop, 'a5')
 
@@ -63,7 +55,7 @@ describe CastlingMoves do
     expect(CastlingMoves.for(board, player2, ChessRules).sort).to eq []
   end
 
-  specify "a player can't castle through check" do
+  it "doesn't let a player castle through check" do
     board.place_piece(white_bishop, 'e7')
     board.place_piece(black_knight, 'e3')
 
@@ -71,9 +63,18 @@ describe CastlingMoves do
     expect(CastlingMoves.for(board, player2, ChessRules).sort).to eq []
   end
 
+  # regression specs
   specify "a player can't castle into check" do
     board.place_piece(black_rook, 'g3')
 
     expect(CastlingMoves.for(board, player1, ChessRules)).to eq ['c1']
+  end
+
+  specify 'a player can sometimes only castle to one side' do
+    player1.can_castle_left = false
+    player2.can_castle_right = false
+
+    expect(CastlingMoves.for(board, player1, ChessRules).sort).to eq ['g1']
+    expect(CastlingMoves.for(board, player2, ChessRules).sort).to eq ['c8']
   end
 end
