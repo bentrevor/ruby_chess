@@ -1,5 +1,5 @@
 module Moves
-  class Castling
+  class ForCastling
     class << self
       def for(board, current_player, rules)
         @rules = rules
@@ -14,7 +14,7 @@ module Moves
       private
 
       def can_castle?(board, current_player)
-        board.pieces[@starting_space].is_a?(Piece::King) &&
+        board.pieces[@starting_space].is_a?(King) &&
           !@rules.in_check?(board, current_player.color)
       end
 

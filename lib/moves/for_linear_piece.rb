@@ -1,10 +1,10 @@
 module Moves
-  class Linear
+  class ForLinearPiece
     include ChessBoardHelpers
 
     class << self
       def for(board, starting_space)
-        return [] if board.pieces[starting_space].is_a? Piece::Knight
+        return [] if board.pieces[starting_space].is_a? Knight
 
         moves = []
         piece = board.pieces[starting_space]

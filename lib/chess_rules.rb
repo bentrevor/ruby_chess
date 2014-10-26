@@ -55,7 +55,7 @@ class ChessRules
       end.keys
 
       moves = spaces_with_pieces.map do |space|
-        Moves::Linear.for(board, space) + Moves::Knight.for(board, space)
+        Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space)
       end.flatten.uniq
     end
 
