@@ -1,4 +1,4 @@
-require './lib/pieces/piece'
+require './lib/moves/knight'
 
 class Knight < Piece
   def initialize(color)
