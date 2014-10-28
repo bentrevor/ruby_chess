@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe ChessBoard do
-  let(:board) { ChessBoard.new }
+describe Board do
+  let(:board) { Board.new }
   let(:black_rook) { Piece.create(:black, :rook) }
   let(:white_bishop) { Piece.create(:white, :bishop) }
   let(:black_queen) { Piece.create(:black, :queen) }
@@ -12,7 +12,7 @@ describe ChessBoard do
   end
 
   it 'can start with only some pieces' do
-    board = ChessBoard.new({ :a1 => black_rook })
+    board = Board.new({ :a1 => black_rook })
     expect(board.pieces['a1']).to be_a Rook
     expect(board.pieces['a1'].color).to eq :black
   end
@@ -41,8 +41,8 @@ describe ChessBoard do
   end
 
   it 'can capture a piece' do
-    board = ChessBoard.new({ :a1 => black_rook,
-                             :a2 => white_bishop })
+    board = Board.new({ :a1 => black_rook,
+                        :a2 => white_bishop })
 
     board.move_piece 'a1 - a2'
 
@@ -57,8 +57,8 @@ describe ChessBoard do
   end
 
   it 'can try/undo a move' do
-    board = ChessBoard.new({ :a1 => black_rook,
-                             :a2 => white_bishop })
+    board = Board.new({ :a1 => black_rook,
+                        :a2 => white_bishop })
 
     board.try_move('a1 - a2') do
       expect(board.pieces['a1']).to be_nil
@@ -70,9 +70,9 @@ describe ChessBoard do
   end
 
   it 'lists all pieces' do
-    board = ChessBoard.new({ :a1 => black_rook,
-                             :b1 => white_bishop,
-                             :h3 => black_queen })
+    board = Board.new({ :a1 => black_rook,
+                        :b1 => white_bishop,
+                        :h3 => black_queen })
 
     expect(board.pieces['a1']).to be black_rook
     expect(board.pieces['b1']).to be white_bishop

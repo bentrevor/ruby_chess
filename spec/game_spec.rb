@@ -7,10 +7,10 @@ describe Game do
   let(:decider2) { double 'move decider 2', :get_move => second_move }
   let(:player1) { Player.new(decider1, :white) }
   let(:player2) { Player.new(decider2, :black) }
-  let(:rules)   { ChessRules }
+  let(:rules)   { Rules }
   let(:writer)  { class_double 'ConsoleWriter', :show => nil, :show_board => nil, :flash_message= => nil }
-  let(:board)   { instance_double 'ChessBoard', :spaces => 'spaces', :move_piece => nil }
-  let(:board)   { ChessBoard.new }
+  let(:board)   { instance_double 'Board', :spaces => 'spaces', :move_piece => nil }
+  let(:board)   { Board.new }
   let(:game)    { Game.new(player1, player2, rules, writer, board) }
 
   before :each do
@@ -52,7 +52,7 @@ describe Game do
   end
 
   it 'shows an invalid move message when a move is invalid' do
-    expect(rules).to receive(:valid_move?).and_raise(ChessRules::InvalidMoveError.new('msg'))
+    expect(rules).to receive(:valid_move?).and_raise(Rules::InvalidMoveError.new('msg'))
     expect(writer).to receive(:flash_message=).with 'msg'
     expect(board).not_to receive(:move_piece)
 

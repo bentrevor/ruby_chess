@@ -15,6 +15,13 @@ module Utils
     bad_file(space) || bad_rank(space)
   end
 
+  def self.correctly_formatted_move?(move)
+    move.length == 7 &&
+      move[3] == '-' &&
+      on_board?(move.split.first) &&
+      on_board?(move.split.last)
+  end
+
   private
 
   def self.bad_file(space)

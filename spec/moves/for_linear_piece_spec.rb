@@ -9,7 +9,7 @@ describe Moves::ForLinearPiece do
   let(:white_pawn)   { Piece.create :white, :pawn }
   let(:white_rook)   { Piece.create :white, :rook }
 
-  let(:board) { ChessBoard.new({'d4' => white_rook}) }
+  let(:board) { Board.new({'d4' => white_rook}) }
 
   describe 'horizontal/vertical moves' do
     it 'knows what moves are legal for a piece' do
@@ -76,7 +76,7 @@ describe Moves::ForLinearPiece do
   end
 
   describe 'diagonal #moves_for' do
-    let(:board) { ChessBoard.new({'d4' => white_bishop}) }
+    let(:board) { Board.new({'d4' => white_bishop}) }
 
     it 'knows what moves are legal for a diagonally-moving piece' do
       %w[a1 b2 c3 e5 f6 g7 h8 a7 b6 c5 e3 f2 g1].each do |space|

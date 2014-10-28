@@ -8,5 +8,5 @@ end
 p1 = Player.new ConsoleReader
 p2 = Player.new ConsoleReader
 
-game = Game.new p1, p2, ChessRules, ConsoleWriter, ChessBoard.new
+game = Game.new p1, p2, Rules, ConsoleWriter, Board.new
 game.start

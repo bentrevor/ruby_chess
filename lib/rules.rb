@@ -1,4 +1,4 @@
-class ChessRules
+class Rules
   class << self
     def valid_move?(move, board, current_player)
       validate_move_format(move)
@@ -45,17 +45,17 @@ class ChessRules
     private
 
     def validate_move_format(move)
-      if move.length != 7 or
-          move[3] != '-' or
-          !(1..8).include?(move[1].to_i) or
-          !(1..8).include?(move[-1].to_i)
+      if move.length != 7 ||
+          move[3] != '-'  ||
+          Utils.off_board?(move[0..1]) ||
+          Utils.off_board?(move[-2..-1])
         raise InvalidMoveError.new("Invalid input:\nEnter a move like 'a2 - a4'.")
       end
     end
 
     def find_king_space(board, color)
       board.pieces.find do |space, piece|
-        return space if piece.color == color and piece.class == King
+        return space if piece.color == color && piece.class == King
       end
     end
 

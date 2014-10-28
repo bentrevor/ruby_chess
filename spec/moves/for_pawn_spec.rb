@@ -5,7 +5,7 @@ describe Moves::ForPawn do
   let(:black_pawn)   { Piece.create :black, :pawn }
   let(:white_rook)   { Piece.create :white, :rook }
   let(:white_pawn)   { Piece.create :white, :pawn }
-  let(:board)        { ChessBoard.new({}) }
+  let(:board)        { Board.new({}) }
 
   it 'knows where a pawn can move' do
     board.place_piece(white_pawn, 'd2')

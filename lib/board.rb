@@ -1,4 +1,4 @@
-class ChessBoard
+class Board
   attr_accessor :spaces
 
   class Space < Struct.new(:file, :rank, :piece)
@@ -13,15 +13,11 @@ class ChessBoard
   end
 
   def move_piece(move)
-    raise ArgumentError unless correctly_formatted?(move)
+    raise ArgumentError unless Utils.correctly_formatted_move?(move)
     original_space = get_space(move.split.first)
 
     place_piece(original_space.piece, move.split.last)
     original_space.piece = nil
-  end
-
-  def correctly_formatted?(move)
-    move.length == 7 and move[3] == '-' and (1..8).include?(move[1].to_i) and (1..8).include?(move[-1].to_i)
   end
 
   def place_piece(piece, space)
@@ -32,7 +28,7 @@ class ChessBoard
     file = space[0]
     rank = space[1].to_i
 
-    spaces.find { |s| s.rank == rank and s.file == file }
+    spaces.find { |s| s.rank == rank && s.file == file }
   end
 
   def pieces
@@ -42,7 +38,7 @@ class ChessBoard
   end
 
   def try_move(move)
-    raise ArgumentError unless correctly_formatted?(move)
+    raise ArgumentError unless Utils.correctly_formatted_move?(move)
     starting_space = move.split.first
     target_space = move.split.last
     starting_piece = pieces[starting_space]
@@ -57,22 +53,14 @@ class ChessBoard
 
   private
 
-  def right_edge_space(index)
-    (index + 1) % 8 == 0
-  end
-
   def starting_pieces(pieces)
-    self.spaces = (0..63).map { |index| Space.new(file_for(index), rank_for(index), nil) }
+    self.spaces = (0..63).map { |index| Space.new(file_for_index(index), rank_for_index(index), nil) }
 
     pieces.each_pair do |space, piece|
       place_piece piece, space
     end
 
     self.spaces
-  end
-
-  def color_for(rank)
-    (rank < 3) ? :white : :black
   end
 
   def piece_type_for(file)
@@ -89,29 +77,31 @@ class ChessBoard
   end
 
   def initial_piece_for(file, rank)
-    color = color_for rank
+    color = (rank < 3) ? :white : :black
 
-    if rank == 1 or rank == 8
+    if rank == 1 || rank == 8
       Piece.create(color, piece_type_for(file))
-    elsif rank == 2 or rank == 7
+    elsif rank == 2 || rank == 7
       Piece.create(color, :pawn)
     end
   end
 
   def build_initial_space_for(index)
-    return Space.new('a', 1, Piece.create(:white, :rook)) if index == 0 # can't divide by 0
+    if index == 0 # can't divide by 0
+      return Space.new('a', 1, Piece.create(:white, :rook))
+    end
 
-    file = file_for index
-    rank = rank_for index
+    file = file_for_index(index)
+    rank = rank_for_index(index)
 
     Space.new(file, rank, initial_piece_for(file, rank))
   end
 
-  def file_for(index)
+  def file_for_index(index)
     ('a'.ord + (index % 8)).chr
   end
 
-  def rank_for(index)
+  def rank_for_index(index)
     (index / 8) + 1
   end
 
