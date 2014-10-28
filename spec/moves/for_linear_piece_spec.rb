@@ -131,4 +131,11 @@ describe Moves::ForLinearPiece do
     board.place_piece(black_knight, 'd4')
     expect(Moves::ForLinearPiece.for(board, 'd4')).to eq []
   end
+
+  it 'only lists spaces on the board' do
+    board.place_piece(black_king, 'd1')
+
+    expect(Moves::ForLinearPiece.for(board, 'd1')).not_to include 'd0'
+    expect(Moves::ForLinearPiece.for(board, 'd1').length).to eq 5
+  end
 end

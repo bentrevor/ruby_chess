@@ -23,6 +23,9 @@ class Game
   def next_turn
     writer.show_board board
     move = current_player.get_move
+    if move.include?('moves') # mostly for debugging
+      moves = rules.all_moves_for_space(move[0..1], board)
+    end
 
     begin
       if rules.valid_move?(move, board, current_player)

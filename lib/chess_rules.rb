@@ -22,6 +22,16 @@ class ChessRules
       false
     end
 
+    def all_moves_for_space(space, board)
+      if board.pieces[space]
+        (Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space)).select do |space|
+          Utils.on_board?(space)
+        end
+      else
+        []
+      end
+    end
+
     def winner(board)
     end
 

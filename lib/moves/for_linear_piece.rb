@@ -11,7 +11,7 @@ module Moves
           moves << remaining_spaces_for(board, direction, starting_space)
         end
 
-        moves.flatten
+        moves.flatten.select { |move| Utils.on_board?(move) }
       end
 
       private
@@ -48,14 +48,6 @@ module Moves
         else
           spaces
         end
-      end
-
-      def incf(file)
-        (file.ord + 1).chr
-      end
-
-      def decf(file)
-        (file.ord - 1).chr
       end
     end
   end

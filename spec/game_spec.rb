@@ -109,4 +109,11 @@ describe Game do
 
     game.start
   end
+
+  it 'can show all the moves for a piece' do
+    expect(player1).to receive(:get_move).and_return 'a1 moves'
+    expect(rules).to receive(:all_moves_for_space).with('a1', board)
+
+    game.next_turn
+  end
 end

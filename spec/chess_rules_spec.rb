@@ -81,4 +81,13 @@ describe ChessRules do
       expect(ChessRules.in_check?(board, :white)).to be true
     end
   end
+
+  describe '#all_moves_for_space' do
+    it 'lists all moves for a piece' do
+      board.place_piece(white_king, 'a8')
+
+      expect(ChessRules.all_moves_for_space('a7', board)).to be_empty
+      expect(ChessRules.all_moves_for_space('a8', board).sort).to eq %w[a7 b7 b8]
+    end
+  end
 end
