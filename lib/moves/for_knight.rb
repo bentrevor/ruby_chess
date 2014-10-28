@@ -1,7 +1,5 @@
 module Moves
   class ForKnight
-    include ChessBoardHelpers
-
     class << self
       def for(board, starting_space)
         return [] unless board.pieces[starting_space].is_a? Knight
@@ -24,19 +22,19 @@ module Moves
       end
 
       def inc_file
-        ChessBoardHelpers.inc_file(@file)
+        Utils.inc_file(@file)
       end
 
       def inc_inc_file
-        ChessBoardHelpers.inc_file(ChessBoardHelpers.inc_file(@file))
+        Utils.inc_file(Utils.inc_file(@file))
       end
 
       def dec_file
-        ChessBoardHelpers.dec_file(@file)
+        Utils.dec_file(@file)
       end
 
       def dec_dec_file
-        ChessBoardHelpers.dec_file(ChessBoardHelpers.dec_file(@file))
+        Utils.dec_file(Utils.dec_file(@file))
       end
 
       def off_board?(file, rank)

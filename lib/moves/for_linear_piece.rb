@@ -1,7 +1,5 @@
 module Moves
   class ForLinearPiece
-    include ChessBoardHelpers
-
     class << self
       def for(board, starting_space)
         return [] if board.pieces[starting_space].is_a? Knight
@@ -25,8 +23,8 @@ module Moves
         current_space = spaces.last || starting_space
         file = current_space[0]
         rank = current_space[1].to_i
-        inc_file = ChessBoardHelpers.inc_file(file)
-        dec_file = ChessBoardHelpers.dec_file(file)
+        inc_file = Utils.inc_file(file)
+        dec_file = Utils.dec_file(file)
 
         return spaces if spaces.length >= moving_piece.limit(starting_rank)
 
