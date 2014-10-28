@@ -1,4 +1,4 @@
-module ChessBoardHelpers
+module Utils
   def self.inc_file(file)
     file.succ
   end

@@ -1,7 +1,5 @@
 module Moves
   class ForPawn
-    include ChessBoardHelpers
-
     def self.for(board, space)
       return [] unless board.pieces[space].is_a? Pawn
 
@@ -30,8 +28,8 @@ module Moves
                     rank - 1
                   end
 
-      ["#{ChessBoardHelpers.inc_file(file)}#{next_rank}",
-       "#{ChessBoardHelpers.dec_file(file)}#{next_rank}"]
+      ["#{Utils.inc_file(file)}#{next_rank}",
+       "#{Utils.dec_file(file)}#{next_rank}"]
     end
   end
 end

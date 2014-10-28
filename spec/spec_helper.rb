@@ -1,6 +1,6 @@
 require 'pry'
 
-require './lib/chess_board_helpers.rb'
+require './lib/utils.rb'
 Dir[File.expand_path("lib/*.rb")].each { |f| require f }
 Dir[File.expand_path("lib/pieces/*.rb")].each { |f| require f }
 Dir[File.expand_path("lib/moves.rb")].each { |f| require f }
