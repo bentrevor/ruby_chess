@@ -4,7 +4,7 @@ describe Moves::ForKnight do
   let(:black_knight) { Piece.create :black, :knight }
   let(:black_pawn)   { Piece.create :black, :pawn }
   let(:white_pawn)   { Piece.create :white, :pawn }
-  let(:board)        { ChessBoard.new({}) }
+  let(:board)        { Board.new({}) }
 
   it 'knows where a knight can move' do
     board.place_piece(black_knight, 'd4')

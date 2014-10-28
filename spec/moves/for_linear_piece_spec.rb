@@ -9,7 +9,7 @@ describe Moves::ForLinearPiece do
   let(:white_pawn)   { Piece.create :white, :pawn }
   let(:white_rook)   { Piece.create :white, :rook }
 
-  let(:board) { ChessBoard.new({'d4' => white_rook}) }
+  let(:board) { Board.new({'d4' => white_rook}) }
 
   describe 'horizontal/vertical moves' do
     it 'knows what moves are legal for a piece' do
@@ -76,7 +76,7 @@ describe Moves::ForLinearPiece do
   end
 
   describe 'diagonal #moves_for' do
-    let(:board) { ChessBoard.new({'d4' => white_bishop}) }
+    let(:board) { Board.new({'d4' => white_bishop}) }
 
     it 'knows what moves are legal for a diagonally-moving piece' do
       %w[a1 b2 c3 e5 f6 g7 h8 a7 b6 c5 e3 f2 g1].each do |space|
@@ -130,5 +130,12 @@ describe Moves::ForLinearPiece do
   it 'returns an empty list for a knight' do
     board.place_piece(black_knight, 'd4')
     expect(Moves::ForLinearPiece.for(board, 'd4')).to eq []
+  end
+
+  it 'only lists spaces on the board' do
+    board.place_piece(black_king, 'd1')
+
+    expect(Moves::ForLinearPiece.for(board, 'd1')).not_to include 'd0'
+    expect(Moves::ForLinearPiece.for(board, 'd1').length).to eq 5
   end
 end

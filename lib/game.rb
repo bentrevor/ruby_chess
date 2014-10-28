@@ -23,14 +23,19 @@ class Game
   def next_turn
     writer.show_board board
     move = current_player.get_move
-
-    begin
-      if rules.valid_move?(move, board, current_player)
-        board.move_piece(move)
-        toggle_players
+    if move.include?('moves') # mostly for debugging
+      moves = rules.all_moves_for_space(move[0..1], board)
+      writer.show moves
+      current_player.pause
+    else
+      begin
+        if rules.valid_move?(move, board, current_player)
+          board.move_piece(move)
+          toggle_players
+        end
+      rescue rules::InvalidMoveError => e
+        writer.flash_message = e.message
       end
-    rescue rules::InvalidMoveError => e
-      writer.flash_message = e.message
     end
   end
 

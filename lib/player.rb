@@ -11,4 +11,8 @@ class Player
   def get_move
     self.decider.get_move
   end
+
+  def pause
+    gets
+  end
 end

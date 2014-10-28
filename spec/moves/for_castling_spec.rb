@@ -11,20 +11,20 @@ describe Moves::ForCastling do
   let(:white_pawn)   { Piece.create :white, :pawn }
   let(:white_rook)   { Piece.create :white, :rook }
 
-  let(:board) { ChessBoard.new({ 'a1' => white_rook,
-                                 'h1' => white_rook,
-                                 'e1' => white_king,
+  let(:board) { Board.new({ 'a1' => white_rook,
+                            'h1' => white_rook,
+                            'e1' => white_king,
 
-                                 'a8' => black_rook,
-                                 'h8' => black_rook,
-                                 'e8' => black_king }) }
+                            'a8' => black_rook,
+                            'h8' => black_rook,
+                            'e8' => black_king }) }
 
   let(:player1) { Player.new(double, :white) }
   let(:player2) { Player.new(double, :black) }
 
   it 'lets a player castle when no pieces are in the way' do
-    expect(Moves::ForCastling.for(board, player1, ChessRules).sort).to eq ['c1', 'g1']
-    expect(Moves::ForCastling.for(board, player2, ChessRules).sort).to eq ['c8', 'g8']
+    expect(Moves::ForCastling.for(board, player1, Rules).sort).to eq ['c1', 'g1']
+    expect(Moves::ForCastling.for(board, player2, Rules).sort).to eq ['c8', 'g8']
   end
 
   it "doesn't let a player castle if there are pieces in the way" do
@@ -33,8 +33,8 @@ describe Moves::ForCastling do
     board.place_piece(white_bishop, 'c8')
     board.place_piece(white_bishop, 'g8')
 
-    expect(Moves::ForCastling.for(board, player1, ChessRules).sort).to eq []
-    expect(Moves::ForCastling.for(board, player2, ChessRules).sort).to eq []
+    expect(Moves::ForCastling.for(board, player1, Rules).sort).to eq []
+    expect(Moves::ForCastling.for(board, player2, Rules).sort).to eq []
   end
 
   it "doesn't let a player castle if they have moved their king or rook" do
@@ -43,38 +43,38 @@ describe Moves::ForCastling do
     player2.can_castle_left  = false
     player2.can_castle_right = false
 
-    expect(Moves::ForCastling.for(board, player1, ChessRules).sort).to eq []
-    expect(Moves::ForCastling.for(board, player2, ChessRules).sort).to eq []
+    expect(Moves::ForCastling.for(board, player1, Rules).sort).to eq []
+    expect(Moves::ForCastling.for(board, player2, Rules).sort).to eq []
   end
 
   it "doesn't let a player castle out of check" do
     board.place_piece(white_bishop, 'a4')
     board.place_piece(black_bishop, 'a5')
 
-    expect(Moves::ForCastling.for(board, player1, ChessRules).sort).to eq []
-    expect(Moves::ForCastling.for(board, player2, ChessRules).sort).to eq []
+    expect(Moves::ForCastling.for(board, player1, Rules).sort).to eq []
+    expect(Moves::ForCastling.for(board, player2, Rules).sort).to eq []
   end
 
   it "doesn't let a player castle through check" do
     board.place_piece(white_bishop, 'e7')
     board.place_piece(black_knight, 'e3')
 
-    expect(Moves::ForCastling.for(board, player1, ChessRules).sort).to eq []
-    expect(Moves::ForCastling.for(board, player2, ChessRules).sort).to eq []
+    expect(Moves::ForCastling.for(board, player1, Rules).sort).to eq []
+    expect(Moves::ForCastling.for(board, player2, Rules).sort).to eq []
   end
 
   # regression specs
   specify "a player can't castle into check" do
     board.place_piece(black_rook, 'g3')
 
-    expect(Moves::ForCastling.for(board, player1, ChessRules)).to eq ['c1']
+    expect(Moves::ForCastling.for(board, player1, Rules)).to eq ['c1']
   end
 
   specify 'a player can sometimes only castle to one side' do
     player1.can_castle_left = false
     player2.can_castle_right = false
 
-    expect(Moves::ForCastling.for(board, player1, ChessRules).sort).to eq ['g1']
-    expect(Moves::ForCastling.for(board, player2, ChessRules).sort).to eq ['c8']
+    expect(Moves::ForCastling.for(board, player1, Rules).sort).to eq ['g1']
+    expect(Moves::ForCastling.for(board, player2, Rules).sort).to eq ['c8']
   end
 end
