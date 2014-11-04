@@ -14,7 +14,7 @@ describe Player do
   end
 
   specify 'computer players use ai to decide a move' do
-    ai = class_double 'AI'
+    ai = instance_double 'AI'
     player = Player.new ai, :white
 
     expect(ai).to receive(:get_move).with(board, rules, player)

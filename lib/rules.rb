@@ -32,6 +32,16 @@ class Rules
       end
     end
 
+    def all_moves_for_color(color, board)
+      spaces_with_pieces = board.pieces.select do |space, piece|
+        piece.color == color
+      end.keys
+
+      moves = spaces_with_pieces.map do |space|
+        Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space)
+      end.flatten.uniq
+    end
+
     def winner(board)
     end
 
@@ -39,7 +49,7 @@ class Rules
       return unless king_space = find_king_space(board, color)
       other_color = (color == :white) ? :black : :white
 
-      all_moves_for(board, other_color).include?(king_space)
+      all_moves_for_color(other_color, board).include?(king_space)
     end
 
     private
@@ -57,16 +67,6 @@ class Rules
       board.pieces.find do |space, piece|
         return space if piece.color == color && piece.class == King
       end
-    end
-
-    def all_moves_for(board, color)
-      spaces_with_pieces = board.pieces.select do |space, piece|
-        piece.color == color
-      end.keys
-
-      moves = spaces_with_pieces.map do |space|
-        Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space)
-      end.flatten.uniq
     end
 
     def legal_move?(target_space, board, starting_space)

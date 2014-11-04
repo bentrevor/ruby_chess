@@ -20,10 +20,9 @@ module Moves
         moving_piece = board.pieces[starting_space]
         starting_rank = starting_space[1].to_i
 
-        current_space = spaces.last || starting_space
-
         return spaces if spaces.length >= moving_piece.limit(starting_rank)
 
+        current_space = spaces.last || starting_space
         next_space = board.move_in_direction(current_space, direction)
 
         return spaces if Utils.off_board?(next_space)

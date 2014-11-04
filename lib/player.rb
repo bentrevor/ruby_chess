@@ -13,6 +13,6 @@ class Player
   end
 
   def pause
-    gets
+    $stdin.gets
   end
 end
