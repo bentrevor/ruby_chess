@@ -8,8 +8,8 @@ class Player
     self.color = color
   end
 
-  def get_move
-    self.decider.get_move
+  def get_move(board, rules)
+    decider.get_move(board, rules)
   end
 
   def pause
