@@ -6,7 +6,7 @@ describe Player do
 
   specify 'human players use input to decide a move' do
     input = double 'input'
-    player = Player.new input
+    player = Player.new input, :white
 
     expect(input).to receive :get_move
 
@@ -15,9 +15,9 @@ describe Player do
 
   specify 'computer players use ai to decide a move' do
     ai = class_double 'AI'
-    player = Player.new ai
+    player = Player.new ai, :white
 
-    expect(ai).to receive(:get_move).with(board, rules)
+    expect(ai).to receive(:get_move).with(board, rules, player)
 
     player.get_move(board, rules)
   end
