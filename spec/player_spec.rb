@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Player do
-  let(:board) { double 'board' }
-  let(:rules) { double 'rules' }
+  let(:board) { Board.new({}) }
+  let(:rules) { Rules }
 
   specify 'human players use input to decide a move' do
     input = double 'input'
