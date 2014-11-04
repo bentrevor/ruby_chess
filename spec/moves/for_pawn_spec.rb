@@ -35,4 +35,11 @@ describe Moves::ForPawn do
     expect(Moves::ForPawn.for(board, 'e7')).to include 'f6'
     expect(Moves::ForPawn.for(board, 'e7')).not_to include 'd6'
   end
+
+  it 'knows where a pawn can not capture' do
+    board.place_piece(white_pawn, 'd2')
+    board.place_piece(black_rook, 'd3')
+
+    expect(Moves::ForPawn.for(board, 'd2')).not_to include 'd3'
+  end
 end

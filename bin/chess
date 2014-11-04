@@ -6,7 +6,12 @@ Dir["./lib/**/*.rb"].each do |file|
 end
 
 p1 = Player.new ConsoleReader, :white
-p2 = Player.new ConsoleReader, :black
+
+if ARGV.include?('ai')
+  p2 = Player.new AI, :black
+else
+  p2 = Player.new ConsoleReader, :black
+end
 
 game = Game.new p1, p2, Rules, ConsoleWriter, Board.new
 game.start

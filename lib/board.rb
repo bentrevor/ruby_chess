@@ -51,6 +51,24 @@ class Board
     get_space(target_space).piece   = target_piece
   end
 
+  def move_in_direction(space, direction)
+    file = space[0]
+    rank = space[1].to_i
+    inc_file = Utils.inc_file(file)
+    dec_file = Utils.dec_file(file)
+
+    {
+      :north     => "#{file}#{rank + 1}",
+      :east      => "#{inc_file}#{rank}",
+      :south     => "#{file}#{rank - 1}",
+      :west      => "#{dec_file}#{rank}",
+      :northeast => "#{inc_file}#{rank + 1}",
+      :southeast => "#{inc_file}#{rank - 1}",
+      :southwest => "#{dec_file}#{rank - 1}",
+      :northwest => "#{dec_file}#{rank + 1}"
+    }[direction]
+  end
+
   private
 
   def starting_pieces(pieces)

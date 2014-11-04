@@ -78,4 +78,15 @@ describe Board do
     expect(board.pieces['b1']).to be white_bishop
     expect(board.pieces['h3']).to be black_queen
   end
+
+  it 'can move in a direction' do
+    expect(board.move_in_direction('d4', :north)).to eq 'd5'
+    expect(board.move_in_direction('d4', :northeast)).to eq 'e5'
+    expect(board.move_in_direction('d4', :east)).to eq 'e4'
+    expect(board.move_in_direction('d4', :southeast)).to eq 'e3'
+    expect(board.move_in_direction('d4', :south)).to eq 'd3'
+    expect(board.move_in_direction('d4', :southwest)).to eq 'c3'
+    expect(board.move_in_direction('d4', :west)).to eq 'c4'
+    expect(board.move_in_direction('d4', :northwest)).to eq 'c5'
+  end
 end

@@ -2,7 +2,7 @@ module Moves
   class ForLinearPiece
     class << self
       def for(board, starting_space)
-        return [] if board.pieces[starting_space].is_a? Knight
+        return [] if non_linear_piece?(board.pieces[starting_space])
 
         moves = []
         piece = board.pieces[starting_space]
@@ -21,23 +21,12 @@ module Moves
         starting_rank = starting_space[1].to_i
 
         current_space = spaces.last || starting_space
-        file = current_space[0]
-        rank = current_space[1].to_i
-        inc_file = Utils.inc_file(file)
-        dec_file = Utils.dec_file(file)
 
         return spaces if spaces.length >= moving_piece.limit(starting_rank)
 
-        next_space = {
-          :north     => "#{file}#{rank + 1}",
-          :east      => "#{inc_file}#{rank}",
-          :south     => "#{file}#{rank - 1}",
-          :west      => "#{dec_file}#{rank}",
-          :northeast => "#{inc_file}#{rank + 1}",
-          :southeast => "#{inc_file}#{rank - 1}",
-          :southwest => "#{dec_file}#{rank - 1}",
-          :northwest => "#{dec_file}#{rank + 1}"
-        }[direction]
+        next_space = board.move_in_direction(current_space, direction)
+
+        return spaces if Utils.off_board?(next_space)
 
         piece_in_next_space = board.pieces[next_space]
 
@@ -48,6 +37,10 @@ module Moves
         else
           spaces
         end
+      end
+
+      def non_linear_piece?(piece)
+        [Pawn, Knight].include? piece.class
       end
     end
   end

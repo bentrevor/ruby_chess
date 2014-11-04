@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Moves::ForLinearPiece do
   let(:black_king)   { Piece.create :black, :king }
+  let(:black_queen)  { Piece.create :black, :queen }
   let(:black_knight) { Piece.create :black, :knight }
   let(:black_pawn)   { Piece.create :black, :pawn }
   let(:white_bishop) { Piece.create :white, :bishop }
@@ -127,9 +128,11 @@ describe Moves::ForLinearPiece do
     end
   end
 
-  it 'returns an empty list for a knight' do
+  it 'returns an empty list for a knight and pawn' do
     board.place_piece(black_knight, 'd4')
+    board.place_piece(black_pawn, 'e4')
     expect(Moves::ForLinearPiece.for(board, 'd4')).to eq []
+    expect(Moves::ForLinearPiece.for(board, 'e4')).to eq []
   end
 
   it 'only lists spaces on the board' do
@@ -137,5 +140,11 @@ describe Moves::ForLinearPiece do
 
     expect(Moves::ForLinearPiece.for(board, 'd1')).not_to include 'd0'
     expect(Moves::ForLinearPiece.for(board, 'd1').length).to eq 5
+  end
+
+  it 'knows how a queen moves' do
+    board = Board.new
+
+    expect(Moves::ForLinearPiece.for(board, 'd8')).not_to include 'g2'
   end
 end

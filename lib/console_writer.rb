@@ -7,7 +7,7 @@ class ConsoleWriter
     end
 
     def show_board(board)
-      # Kernel.system "clear"
+      Kernel.system "clear"
       show(flash_message || "\n\n")
       self.flash_message = "\n\n"
       show(printable(board.spaces))
