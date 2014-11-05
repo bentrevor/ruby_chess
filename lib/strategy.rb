@@ -1,25 +1,37 @@
 class Strategy
-  def self.score_board(board, rules, player)
-    winner = rules.winner(board)
+  class << self
+    def score_board(board, rules, player)
+      winner = rules.winner(board)
 
-    if winner
-      return (winner == player.color) ? 10000 : -10000
+      if winner
+        return (winner == player.color) ? 10000 : -10000
+      end
+
+      pieces_score(board, player)
     end
 
-    pieces = board.pieces.values.select { |p| p.color == player.color }
+    def pieces_score(board, player)
+      all_pieces      = board.pieces.values
+      player_pieces   = all_pieces.select { |p| p.color == player.color }
+      opponent_pieces = all_pieces.select { |p| p.color != player.color }
 
-    pieces.map { |p| piece_scores[p.abbrev] }.reduce(:+)
-  end
+      player_score   = player_pieces.map { |p| piece_scores[p.abbrev] }.reduce(:+)   || 0
+      opponent_score = opponent_pieces.map { |p| piece_scores[p.abbrev] }.reduce(:+) || 0
 
-  private
+      player_score - opponent_score
+    end
 
-  def self.piece_scores
-    {
-      'p' => 1,
-      'n' => 3,
-      'b' => 3,
-      'r' => 5,
-      'q' => 9
-    }
+    private
+
+    def piece_scores
+      {
+        'p' => 1,
+        'n' => 3,
+        'b' => 3,
+        'r' => 5,
+        'q' => 9,
+        'k' => 0
+      }
+    end
   end
 end

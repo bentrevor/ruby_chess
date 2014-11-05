@@ -110,4 +110,23 @@ describe Rules do
       expect(Rules.all_moves_for_space('e1', board, player1).sort).to include 'e1 - g1'
     end
   end
+
+  describe '#all_moves_for_player' do
+    it 'lists every move a player can make' do
+      board.place_piece(white_king, 'd4')
+
+      expect(Rules.all_moves_for_player(player1, board)).to include 'd4 - c5'
+      expect(Rules.all_moves_for_player(player1, board)).to include 'd4 - e3'
+      expect(Rules.all_moves_for_player(player1, board).length).to eq 8
+
+      board.place_piece(white_rook, 'a1')
+
+      expect(Rules.all_moves_for_player(player1, board)).to include 'a1 - a2'
+      expect(Rules.all_moves_for_player(player1, board)).to include 'a1 - a8'
+
+      board.place_piece(black_bishop, 'b2')
+
+      expect(Rules.all_moves_for_player(player2, board)).to include 'b2 - a1'
+    end
+  end
 end

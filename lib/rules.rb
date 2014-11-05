@@ -33,6 +33,14 @@ class Rules
       end
     end
 
+    def all_moves_for_player(player, board)
+      spaces = board.pieces.select { |_, piece| piece.color == player.color }.keys
+
+      spaces.map do |space|
+        all_moves_for_space(space, board, player)
+      end.flatten
+    end
+
     def winner(board)
     end
 
