@@ -6,17 +6,11 @@ class AI
   end
 
   def get_move(board, rules, player)
-    spaces = board.pieces.select do |space, piece|
-      piece.color == player.color
-    end.keys
+    spaces = board.pieces.select { |_, piece| piece.color == player.color }.keys
 
-    moves = []
-
-    spaces.each do |space|
-      Moves.for(board, space, player, rules).each do |target_space|
-        moves << "#{space} - #{target_space}"
-      end
-    end
+    moves = spaces.map do |space|
+      rules.all_moves_for_space(space, board, player)
+    end.flatten
 
     scored_moves = {}
 

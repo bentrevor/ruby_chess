@@ -9,7 +9,7 @@ p1 = Player.new ConsoleReader, :white
 ai = AI.new RandomMove
 
 if ARGV.include?('ai')
-  p2 = Player.new AI, :black
+  p2 = Player.new ai, :black
 else
   p2 = Player.new ConsoleReader, :black
 end

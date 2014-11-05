@@ -19,4 +19,12 @@ describe Strategy do
       expect(strategy.score_board(board, rules, player)).to eq points
     end
   end
+
+  it 'scores a win as 10000' do
+    # arbitrary number for now, not sure what the scale will end up being
+    # expect(rules).to receive(:game_over?).and_return true
+    expect(rules).to receive(:winner).and_return :black
+
+    expect(strategy.score_board(board, rules, player)).to eq 10000
+  end
 end

@@ -50,7 +50,28 @@ module Moves
       end
 
       def safe_castle_spaces?(board, player, spaces)
-        all_empty_spaces?(board, spaces) && !castling_through_check?(board, player, spaces)
+        correct_pieces(board, player, spaces) &&
+          all_empty_spaces?(board, spaces)    &&
+          !castling_through_check?(board, player, spaces)
+      end
+
+      def correct_pieces(board, player, spaces)
+        rook_file = if spaces.first[0] == 'b'
+                      'a'
+                    else
+                      'h'
+                    end
+
+        rank = spaces.first[1]
+        rook_space = "#{rook_file}#{rank}"
+        king_space = "e#{rank}"
+
+        rook = board.pieces[rook_space]
+        king = board.pieces[king_space]
+
+        rook                       && king                       &&
+        rook.is_a?(Rook)           && king.is_a?(King)           &&
+        rook.color == player.color && king.color == player.color
       end
 
       def castling_through_check?(board, player, spaces)

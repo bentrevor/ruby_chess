@@ -73,10 +73,16 @@ describe Rules do
       expect(Rules.in_check?(board, :black)).to be true
     end
 
-    # regression specs
     specify 'a knight can put a king in check' do
       board.place_piece(white_king, 'e8')
       board.place_piece(black_knight, 'f6')
+
+      expect(Rules.in_check?(board, :white)).to be true
+    end
+
+    specify 'a pawn can put a king in check' do
+      board.place_piece(white_king, 'd4')
+      board.place_piece(black_pawn, 'e5')
 
       expect(Rules.in_check?(board, :white)).to be true
     end
@@ -86,8 +92,22 @@ describe Rules do
     it 'lists all moves for a piece' do
       board.place_piece(white_king, 'a8')
 
-      expect(Rules.all_moves_for_space('a7', board)).to be_empty
-      expect(Rules.all_moves_for_space('a8', board).sort).to eq %w[a7 b7 b8]
+      expect(Rules.all_moves_for_space('a7', board, player1)).to be_empty
+      expect(Rules.all_moves_for_space('a8', board, player1).sort).to eq ['a8 - a7', 'a8 - b7', 'a8 - b8']
+    end
+
+    it 'includes pawn moves' do
+      board.place_piece(white_pawn, 'a2')
+
+      expect(Rules.all_moves_for_space('a2', board, player1).sort).to eq ['a2 - a3', 'a2 - a4']
+    end
+
+    it 'includes castle moves' do
+      board.place_piece(white_king, 'e1')
+      board.place_piece(white_rook, 'h1')
+
+      expect(Rules.all_moves_for_space('e1', board, player1).sort).not_to include 'e1 - c1'
+      expect(Rules.all_moves_for_space('e1', board, player1).sort).to include 'e1 - g1'
     end
   end
 end

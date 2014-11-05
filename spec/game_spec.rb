@@ -115,7 +115,7 @@ describe Game do
 
     expect(player1).to receive(:get_move).with(board, rules).and_return 'a1 moves'
     expect(player1).to receive(:pause)
-    expect(rules).to receive(:all_moves_for_space).with('a1', board).and_return(target_spaces)
+    expect(rules).to receive(:all_moves_for_space).with('a1', board, player1).and_return(target_spaces)
     expect(rules).not_to receive(:valid_move?)
     expect(writer).to receive(:show).with(target_spaces)
 
