@@ -24,8 +24,8 @@ describe Moves::ForCastling do
   let(:player2) { Player.new(double, :black) }
 
   it 'lets a player castle when no pieces are in the way' do
-    expect(Moves::ForCastling.for(board, player1, rules).sort).to eq ['c1', 'g1']
-    expect(Moves::ForCastling.for(board, player2, rules).sort).to eq ['c8', 'g8']
+    expect(Moves::ForCastling.for(board, player1, rules).sort).to eq ['e1 - c1', 'e1 - g1']
+    expect(Moves::ForCastling.for(board, player2, rules).sort).to eq ['e8 - c8', 'e8 - g8']
   end
 
   it "doesn't let a player castle if there are pieces in the way" do
@@ -67,15 +67,15 @@ describe Moves::ForCastling do
   specify "a player can't castle into check" do
     board.place_piece(black_rook, 'g3')
 
-    expect(Moves::ForCastling.for(board, player1, rules)).to eq ['c1']
+    expect(Moves::ForCastling.for(board, player1, rules)).to eq ['e1 - c1']
   end
 
   specify 'a player can sometimes only castle to one side' do
     player1.can_castle_left = false
     player2.can_castle_right = false
 
-    expect(Moves::ForCastling.for(board, player1, rules).sort).to eq ['g1']
-    expect(Moves::ForCastling.for(board, player2, rules).sort).to eq ['c8']
+    expect(Moves::ForCastling.for(board, player1, rules).sort).to eq ['e1 - g1']
+    expect(Moves::ForCastling.for(board, player2, rules).sort).to eq ['e8 - c8']
   end
 
   specify "a player can't castle without a rook" do

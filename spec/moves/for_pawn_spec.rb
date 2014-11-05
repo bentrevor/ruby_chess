@@ -9,10 +9,10 @@ describe Moves::ForPawn do
 
   it 'knows where a pawn can move' do
     board.place_piece(white_pawn, 'd2')
-    expect(Moves::ForPawn.for(board, 'd2').sort).to eq %w[d3 d4]
+    expect(Moves::ForPawn.for(board, 'd2').sort).to eq ['d2 - d3', 'd2 - d4']
 
     board.place_piece(black_pawn, 'b5')
-    expect(Moves::ForPawn.for(board, 'b5')).to eq %w[b4]
+    expect(Moves::ForPawn.for(board, 'b5')).to eq ['b5 - b4']
   end
 
   it 'knows that non-pawns have no pawn moves' do
@@ -25,21 +25,21 @@ describe Moves::ForPawn do
     board.place_piece(black_rook, 'c3')
     board.place_piece(white_rook, 'e3')
 
-    expect(Moves::ForPawn.for(board, 'd2')).to include 'c3'
-    expect(Moves::ForPawn.for(board, 'd2')).not_to include 'e3'
+    expect(Moves::ForPawn.for(board, 'd2')).to include 'd2 - c3'
+    expect(Moves::ForPawn.for(board, 'd2')).not_to include 'd2 - e3'
 
     board.place_piece(black_pawn, 'e7')
     board.place_piece(black_rook, 'd6')
     board.place_piece(white_rook, 'f6')
 
-    expect(Moves::ForPawn.for(board, 'e7')).to include 'f6'
-    expect(Moves::ForPawn.for(board, 'e7')).not_to include 'd6'
+    expect(Moves::ForPawn.for(board, 'e7')).to include 'e7 - f6'
+    expect(Moves::ForPawn.for(board, 'e7')).not_to include 'e7 - d6'
   end
 
   it 'knows where a pawn can not capture' do
     board.place_piece(white_pawn, 'd2')
     board.place_piece(black_rook, 'd3')
 
-    expect(Moves::ForPawn.for(board, 'd2')).not_to include 'd3'
+    expect(Moves::ForPawn.for(board, 'd2')).not_to include 'd2 - d3'
   end
 end

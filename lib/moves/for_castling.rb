@@ -4,8 +4,9 @@ module Moves
       def for(board, current_player, rules)
         @rules = rules
         @starting_space = (current_player.color == :white) ? 'e1' : 'e8'
+
         if can_castle?(board, current_player)
-          castle_spaces_for(board, current_player)
+          castle_moves_for(board, current_player)
         else
           []
         end
@@ -18,11 +19,11 @@ module Moves
           !@rules.in_check?(board, current_player.color)
       end
 
-      def castle_spaces_for(board, player)
+      def castle_moves_for(board, player)
         spaces = []
 
-        spaces << "c#{home_rank(player.color)}" if can_castle_left?(board, player)
-        spaces << "g#{home_rank(player.color)}" if can_castle_right?(board, player)
+        spaces << "#{@starting_space} - c#{home_rank(player.color)}" if can_castle_left?(board, player)
+        spaces << "#{@starting_space} - g#{home_rank(player.color)}" if can_castle_right?(board, player)
 
         spaces
       end

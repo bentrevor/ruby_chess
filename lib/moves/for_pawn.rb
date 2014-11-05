@@ -9,7 +9,7 @@ module Moves
     def initialize(board, space)
       self.board = board
       self.space = space
-      self.pawn = board.pieces[space]
+      self.pawn  = board.pieces[space]
     end
 
     def moves
@@ -22,14 +22,14 @@ module Moves
 
     def linear_pawn_moves
       direction = pawn.directions.first
-      first_move = board.move_in_direction(space, direction)
+      first_move = "#{space} - #{board.move_in_direction(space, direction)}"
 
       return [] if board.pieces[first_move]
 
       moves = [first_move]
 
       if pawn.on_home_rank?(space[1].to_i)
-        second_move = board.move_in_direction(first_move, direction)
+        second_move = "#{space} - #{board.move_in_direction(first_move, direction)}"
         moves << second_move unless board.pieces[second_move]
       end
 

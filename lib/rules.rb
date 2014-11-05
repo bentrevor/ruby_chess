@@ -12,7 +12,7 @@ class Rules
       raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != current_color
 
       moves_for_space = Moves.for(board, starting_space, current_player, self)
-      raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless moves_for_space.include?(target_space)
+      raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless moves_for_space.include?(move)
       raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless legal_move?(target_space, board, starting_space)
 
       true
@@ -24,10 +24,7 @@ class Rules
 
     def all_moves_for_space(space, board, player)
       if board.pieces[space]
-        all_target_spaces = Moves.for(board, space, player, self)
-        valid_target_spaces = all_target_spaces.select { |space| Utils.on_board?(space) }
-
-        valid_target_spaces.map { |target| "#{space} - #{target}" }
+        Moves.for(board, space, player, self)
       else
         []
       end

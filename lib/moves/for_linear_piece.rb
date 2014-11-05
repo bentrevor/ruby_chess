@@ -4,14 +4,15 @@ module Moves
       def for(board, starting_space)
         return [] if non_linear_piece?(board.pieces[starting_space])
 
-        moves = []
         piece = board.pieces[starting_space]
 
-        piece.directions.each do |direction|
-          moves << remaining_spaces_for(board, direction, starting_space)
+        spaces = piece.directions.map do |direction|
+          remaining_spaces_for(board, direction, starting_space)
         end
 
-        moves.flatten.select { |move| Utils.on_board?(move) }
+        target_spaces = spaces.flatten.select { |move| Utils.on_board?(move) }
+
+        target_spaces.map { |target_space| "#{starting_space} - #{target_space}" }
       end
 
       private

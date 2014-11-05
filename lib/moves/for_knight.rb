@@ -7,10 +7,11 @@ module Moves
         @file = starting_space[0]
         @rank = starting_space[1].to_i
 
-        l_moves.select do |space|
-          Utils.on_board?(space) &&
-            !colliding(board, starting_space, space)
+        target_spaces = l_moves.select do |space|
+          Utils.on_board?(space) && !colliding(board, starting_space, space)
         end
+
+        target_spaces.map { |target_space| "#{starting_space} - #{target_space}" }
       end
 
       private
