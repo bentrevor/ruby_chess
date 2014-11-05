@@ -22,14 +22,23 @@ class Rules
       false
     end
 
-    def all_moves_for_space(space, board)
+    def all_moves_for_space(space, board, player)
       if board.pieces[space]
-        (Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space)).select do |space|
-          Utils.on_board?(space)
-        end
+        all_target_spaces = Moves.for(board, space, player, self)
+        valid_target_spaces = all_target_spaces.select { |space| Utils.on_board?(space) }
+
+        valid_target_spaces.map { |target| "#{space} - #{target}" }
       else
         []
       end
+    end
+
+    def all_moves_for_player(player, board)
+      spaces = board.pieces.select { |_, piece| piece.color == player.color }.keys
+
+      spaces.map do |space|
+        all_moves_for_space(space, board, player)
+      end.flatten
     end
 
     def winner(board)
@@ -39,10 +48,22 @@ class Rules
       return unless king_space = find_king_space(board, color)
       other_color = (color == :white) ? :black : :white
 
-      all_moves_for(board, other_color).include?(king_space)
+      all_target_spaces_for_color(other_color, board).include?(king_space)
     end
 
     private
+
+    def all_target_spaces_for_color(color, board)
+      spaces_with_pieces = board.pieces.select do |space, piece|
+        piece.color == color
+      end.keys
+
+      target_spaces = spaces_with_pieces.map do |space|
+        Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space) + Moves::ForPawn.for(board, space)
+      end
+
+      target_spaces.flatten.uniq
+    end
 
     def validate_move_format(move)
       if move.length != 7 ||
@@ -57,16 +78,6 @@ class Rules
       board.pieces.find do |space, piece|
         return space if piece.color == color && piece.class == King
       end
-    end
-
-    def all_moves_for(board, color)
-      spaces_with_pieces = board.pieces.select do |space, piece|
-        piece.color == color
-      end.keys
-
-      moves = spaces_with_pieces.map do |space|
-        Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space)
-      end.flatten.uniq
     end
 
     def legal_move?(target_space, board, starting_space)

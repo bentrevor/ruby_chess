@@ -11,13 +11,13 @@ class Pawn < Piece
     (on_home_rank?(rank)) ? 2 : 1
   end
 
-  private
-
   def on_home_rank?(rank)
     home_rank = (color == :white) ? 2 : 7
 
     rank == home_rank
   end
+
+  private
 
   def pawn_directions
     (color == :white) ? [:north] : [:south]

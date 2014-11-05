@@ -5,8 +5,14 @@ Dir["./lib/**/*.rb"].each do |file|
   require file
 end
 
-p1 = Player.new ConsoleReader
-p2 = Player.new ConsoleReader
+p1 = Player.new ConsoleReader, :white
+ai = AI.new BestSingleMove
+
+if ARGV.include?('ai')
+  p2 = Player.new ai, :black
+else
+  p2 = Player.new ConsoleReader, :black
+end
 
 game = Game.new p1, p2, Rules, ConsoleWriter, Board.new
 game.start

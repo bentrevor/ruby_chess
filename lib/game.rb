@@ -22,9 +22,10 @@ class Game
 
   def next_turn
     writer.show_board board
-    move = current_player.get_move
+    move = current_player.get_move(board, rules)
+
     if move.include?('moves') # mostly for debugging
-      moves = rules.all_moves_for_space(move[0..1], board)
+      moves = rules.all_moves_for_space(move[0..1], board, current_player)
       writer.show moves
       current_player.pause
     else
