@@ -7,15 +7,16 @@ module Moves
         @file = starting_space[0]
         @rank = starting_space[1].to_i
 
-        l_moves.select do |space|
-          Utils.on_board?(space) &&
-            !colliding(board, starting_space, space)
+        target_spaces = l_spaces.select do |space|
+          Utils.on_board?(space) && !colliding(board, starting_space, space)
         end
+
+        Utils.spaces_to_moves(target_spaces, starting_space)
       end
 
       private
 
-      def l_moves
+      def l_spaces
         ["#{dec_dec_file}#{@rank - 1}", "#{dec_dec_file}#{@rank + 1}",
          "#{dec_file}#{@rank - 2}",     "#{dec_file}#{@rank + 2}",
          "#{inc_inc_file}#{@rank - 1}", "#{inc_inc_file}#{@rank + 1}",
@@ -31,11 +32,9 @@ module Moves
         starting_piece = board.pieces[starting_space]
         target_piece = board.pieces[target_space]
 
-        if target_piece && starting_piece && target_piece.color == starting_piece.color
-          true
-        else
-          false
-        end
+        target_piece     &&
+          starting_piece &&
+          target_piece.color == starting_piece.color
       end
     end
   end
