@@ -12,7 +12,7 @@ module Moves
 
         target_spaces = spaces.flatten.select { |move| Utils.on_board?(move) }
 
-        target_spaces.map { |target_space| "#{starting_space} - #{target_space}" }
+        Utils.spaces_to_moves(target_spaces, starting_space)
       end
 
       private

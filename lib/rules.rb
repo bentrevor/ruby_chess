@@ -82,9 +82,7 @@ class Rules
       color = board.pieces[starting_space].color
 
       board.try_move("#{starting_space} - #{target_space}") do
-        if in_check?(board, color)
-          valid_move = false
-        end
+        valid_move = false if in_check?(board, color)
       end
 
       valid_move

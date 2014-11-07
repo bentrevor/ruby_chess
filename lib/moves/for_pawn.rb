@@ -37,13 +37,13 @@ module Moves
     end
 
     def capture_moves
-      target_spaces.select do |target_space|
+      capture_spaces = target_spaces.select do |target_space|
         target_piece = board.pieces[target_space]
 
         target_piece && target_piece.color != pawn.color
-      end.map do |target|
-        "#{space} - #{target}"
       end
+
+      Utils.spaces_to_moves(capture_spaces, space)
     end
 
     def target_spaces

@@ -9,7 +9,6 @@ describe Game do
   let(:player2) { Player.new(decider2, :black) }
   let(:rules)   { Rules }
   let(:writer)  { class_double 'ConsoleWriter', :show => nil, :show_board => nil, :flash_message= => nil }
-  let(:board)   { instance_double 'Board', :spaces => 'spaces', :move_piece => nil }
   let(:board)   { Board.new }
   let(:game)    { Game.new(player1, player2, rules, writer, board) }
 
