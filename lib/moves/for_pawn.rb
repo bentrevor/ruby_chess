@@ -13,7 +13,7 @@ module Moves
     end
 
     def moves
-      linear_pawn_moves + capture_spaces
+      linear_pawn_moves + capture_moves
     end
 
     private
@@ -24,23 +24,25 @@ module Moves
       direction = pawn.directions.first
       first_move = "#{space} - #{board.move_in_direction(space, direction)}"
 
-      return [] if board.pieces[first_move]
+      return [] if board.pieces[first_move[-2..-1]]
 
       moves = [first_move]
 
       if pawn.on_home_rank?(space[1].to_i)
-        second_move = "#{space} - #{board.move_in_direction(first_move, direction)}"
+        second_move = "#{space} - #{board.move_in_direction(first_move[-2..-1], direction)}"
         moves << second_move unless board.pieces[second_move]
       end
 
       moves
     end
 
-    def capture_spaces
+    def capture_moves
       target_spaces.select do |target_space|
         target_piece = board.pieces[target_space]
 
         target_piece && target_piece.color != pawn.color
+      end.map do |target|
+        "#{space} - #{target}"
       end
     end
 

@@ -11,7 +11,7 @@ class Rules
       raise InvalidMoveError.new("Invalid move:\nThere is no piece at #{starting_space}.") if piece.nil?
       raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != current_color
 
-      moves_for_space = Moves.for(board, starting_space, current_player, self)
+      moves_for_space = all_moves_for_space(starting_space, board, current_player)
       raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless moves_for_space.include?(move)
       raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless legal_move?(target_space, board, starting_space)
 
@@ -20,22 +20,6 @@ class Rules
 
     def game_over?(board)
       false
-    end
-
-    def all_moves_for_space(space, board, player)
-      if board.pieces[space]
-        Moves.for(board, space, player, self)
-      else
-        []
-      end
-    end
-
-    def all_moves_for_player(player, board)
-      spaces = board.pieces.select { |_, piece| piece.color == player.color }.keys
-
-      spaces.map do |space|
-        all_moves_for_space(space, board, player)
-      end.flatten
     end
 
     def winner(board)
@@ -48,9 +32,17 @@ class Rules
       all_target_spaces_for_color(other_color, board).include?(king_space)
     end
 
+    def all_moves_for_player(player, board)
+      all_moves_for_color(player.color, board)
+    end
+
+    def all_moves_for_space(space, board, player)
+      Moves.for(board, space, player, self)
+    end
+
     private
 
-    def all_target_spaces_for_color(color, board)
+    def all_moves_for_color(color, board)
       spaces_with_pieces = board.pieces.select do |space, piece|
         piece.color == color
       end.keys
@@ -60,6 +52,14 @@ class Rules
       end
 
       target_spaces.flatten.uniq
+    end
+
+    def all_target_spaces_for_color(color, board)
+      moves = all_moves_for_color(color, board)
+
+      moves.map do |move|
+        move[-2..-1]
+      end
     end
 
     def validate_move_format(move)

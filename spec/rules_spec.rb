@@ -98,8 +98,10 @@ describe Rules do
 
     it 'includes pawn moves' do
       board.place_piece(white_pawn, 'a2')
-
       expect(Rules.all_moves_for_space('a2', board, player1).sort).to eq ['a2 - a3', 'a2 - a4']
+
+      board.place_piece(black_rook, 'b3')
+      expect(Rules.all_moves_for_space('a2', board, player1).sort).to include 'a2 - b3'
     end
 
     it 'includes castle moves' do
