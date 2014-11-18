@@ -14,5 +14,5 @@ else
   p2 = Player.new ConsoleReader, :black
 end
 
-game = Game.new p1, p2, Rules, ConsoleWriter, Board.new
+game = Game.new p1, p2, ConsoleWriter, Board.new
 game.start

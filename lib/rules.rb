@@ -1,99 +1,88 @@
 class Rules
-  class << self
-    def valid_move?(move, board, current_player)
-      validate_move_format(move)
-
-      current_color = current_player.color
-      starting_space = move.split.first
-      target_space = move.split.last
-      piece = board.get_space(starting_space).piece
-
-      raise InvalidMoveError.new("Invalid move:\nThere is no piece at #{starting_space}.") if piece.nil?
-      raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != current_color
-
-      moves_for_space = all_moves_for_space(starting_space, board, current_player)
-      raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless moves_for_space.include?(move)
-      raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless legal_move?(target_space, board, starting_space)
-
-      true
-    end
-
-    def game_over?(board)
-      false
-    end
-
-    def winner(board)
-    end
-
-    def in_check?(board, color)
-      return unless king_space = find_king_space(board, color)
-      other_color = (color == :white) ? :black : :white
-
-      all_target_spaces_for_color(other_color, board).include?(king_space)
-    end
-
-    def all_moves_for_player(player, board)
-      all_moves_for_color(player.color, board)
-    end
-
-    def all_moves_for_space(space, board, player)
-      Moves.for(board, space, player, self)
-    end
-
-    private
-
-    def all_moves_for_color(color, board)
-      spaces_with_pieces = board.pieces.select do |space, piece|
-        piece.color == color
-      end.keys
-
-      target_spaces = spaces_with_pieces.map do |space|
-        Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space) + Moves::ForPawn.for(board, space)
-      end
-
-      target_spaces.flatten.uniq
-    end
-
-    def all_target_spaces_for_color(color, board)
-      moves = all_moves_for_color(color, board)
-
-      moves.map do |move|
-        move[-2..-1]
-      end
-    end
-
-    def validate_move_format(move)
-      if move.length != 7 ||
-          move[3] != '-'  ||
-          Utils.off_board?(move[0..1]) ||
-          Utils.off_board?(move[-2..-1])
-        raise InvalidMoveError.new("Invalid input:\nEnter a move like 'a2 - a4'.")
-      end
-    end
-
-    def find_king_space(board, color)
-      board.pieces.find do |space, piece|
-        return space if piece.color == color && piece.class == King
-      end
-    end
-
-    def legal_move?(target_space, board, starting_space)
-      valid_move = true
-      color = board.pieces[starting_space].color
-
-      board.try_move("#{starting_space} - #{target_space}") do
-        valid_move = false if in_check?(board, color)
-      end
-
-      valid_move
-    end
-  end
 
   class InvalidMoveError < StandardError
     attr_accessor :message
 
     def initialize(msg)
       self.message = msg
+    end
+  end
+
+  attr_accessor :board, :player, :other_player
+
+  def initialize(board, player, other_player)
+    self.board  = board
+    self.player = player
+    self.other_player = other_player
+  end
+
+  def valid_move?(move)
+    raise InvalidMoveError.new("Invalid input:\nEnter a move like 'a2 - a4'.") unless Utils.correctly_formatted_move?(move)
+
+    starting_space = move.split.first
+    piece = board.get_space(starting_space).piece
+
+    raise InvalidMoveError.new("Invalid move:\nThere is no piece at #{starting_space}.") if piece.nil?
+    raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != player.color
+
+    moves_for_space = all_moves_for_space(starting_space)
+    raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless moves_for_space.include?(move)
+    raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless legal_move?(move)
+
+    true
+  end
+
+  def game_over?
+    false
+  end
+
+  def all_moves_for_player
+    all_moves_for_color(player.color)
+  end
+
+  def in_check?
+    return unless king_space = find_king_space(player.color)
+
+    all_target_spaces_for_color(other_player.color).include?(king_space)
+  end
+
+  def all_moves_for_space(space)
+    Moves.for(space, self)
+  end
+
+  def legal_move?(move)
+    valid_move = true
+
+    board.try_move(move) do
+      valid_move = false if in_check?
+    end
+
+    valid_move
+  end
+
+  def find_king_space(color)
+    board.pieces.find do |space, piece|
+      return space if piece.color == color && piece.class == King
+    end
+  end
+
+  def all_moves_for_color(color)
+    spaces_with_pieces = board.pieces.select do |space, piece|
+      piece.color == color
+    end.keys
+
+    target_spaces = spaces_with_pieces.map do |space|
+      Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space) + Moves::ForPawn.for(board, space)
+    end
+
+    target_spaces.flatten.uniq
+  end
+
+  def all_target_spaces_for_color(color)
+    moves = all_moves_for_color(color)
+
+    moves.map do |move|
+      move[-2..-1]
     end
   end
 end
