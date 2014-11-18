@@ -30,8 +30,8 @@ module Moves
     def castle_moves
       moves = []
 
-      moves << "#{@starting_space} - c#{home_rank(@player.color)}" if can_castle_left?
-      moves << "#{@starting_space} - g#{home_rank(@player.color)}" if can_castle_right?
+      moves << Move.new("#{@starting_space} c c#{home_rank(@player.color)}") if can_castle_left?
+      moves << Move.new("#{@starting_space} c g#{home_rank(@player.color)}") if can_castle_right?
 
       moves
     end
@@ -91,7 +91,7 @@ module Moves
       target_spaces = @spaces.reject{ |s| s.include?('b') }
 
       target_spaces.each do |target_space|
-        @board.try_move("#{@starting_space} - #{target_space}") do
+        @board.try_move(Move.new("#{@starting_space} - #{target_space}")) do
           castling_through_check = true if @rules.in_check?
         end
       end

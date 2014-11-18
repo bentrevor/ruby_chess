@@ -13,6 +13,6 @@ describe Moves do
   it 'returns the moves for a piece' do
     board.place_piece(Piece.create(:white, :king), 'a1')
 
-    expect(Moves.for('a1', rules).sort).to eq ['a1 - a2', 'a1 - b1', 'a1 - b2']
+    expect(Moves.for('a1', rules).map(&:text).sort).to eq ['a1 - a2', 'a1 - b1', 'a1 - b2']
   end
 end

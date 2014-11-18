@@ -22,18 +22,18 @@ module Moves
 
     def linear_pawn_moves
       direction = pawn.directions.first
-      first_move = "#{space} - #{board.move_in_direction(space, direction)}"
+      first_target_space = board.move_in_direction(space, direction)
 
-      return [] if board.pieces[first_move[-2..-1]]
+      return [] if board.pieces[first_target_space]
 
-      moves = [first_move]
+      target_spaces = [first_target_space]
 
       if pawn.on_home_rank?(space[1].to_i)
-        second_move = "#{space} - #{board.move_in_direction(first_move[-2..-1], direction)}"
-        moves << second_move unless board.pieces[second_move]
+        second_target_space = "#{board.move_in_direction(first_target_space, direction)}"
+        target_spaces << second_target_space unless board.pieces[second_target_space]
       end
 
-      moves
+      Utils.spaces_to_moves(target_spaces, space)
     end
 
     def capture_moves

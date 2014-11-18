@@ -19,7 +19,7 @@ class Rules
   def valid_move?(move)
     raise InvalidMoveError.new("Invalid input:\nEnter a move like 'a2 - a4'.") unless Utils.correctly_formatted_move?(move)
 
-    starting_space = move.split.first
+    starting_space = move.starting_space
     piece = board.get_space(starting_space).piece
 
     raise InvalidMoveError.new("Invalid move:\nThere is no piece at #{starting_space}.") if piece.nil?
@@ -27,7 +27,7 @@ class Rules
 
     moves_for_space = all_moves_for_space(starting_space)
     raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless moves_for_space.include?(move)
-    raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless legal_move?(move)
+    raise InvalidMoveError.new("Invalid move:\nYou're moving into check or something.") unless legal_move?(move)
 
     true
   end
@@ -71,18 +71,18 @@ class Rules
       piece.color == color
     end.keys
 
-    target_spaces = spaces_with_pieces.map do |space|
+    moves = spaces_with_pieces.map do |space|
       Moves::ForLinearPiece.for(board, space) + Moves::ForKnight.for(board, space) + Moves::ForPawn.for(board, space)
     end
 
-    target_spaces.flatten.uniq
+    moves.flatten.uniq
   end
 
   def all_target_spaces_for_color(color)
     moves = all_moves_for_color(color)
 
     moves.map do |move|
-      move[-2..-1]
+      move.target_space
     end
   end
 end

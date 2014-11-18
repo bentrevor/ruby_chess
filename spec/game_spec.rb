@@ -1,15 +1,15 @@
 require 'spec_helper'
 
 describe Game do
-  let(:first_move) { 'e2 - e4' }
-  let(:second_move) { 'e7 - e5' }
-  let(:decider1) { double 'move decider 1', :get_move => first_move }
-  let(:decider2) { double 'move decider 2', :get_move => second_move }
-  let(:player1) { Player.new(decider1, :white) }
-  let(:player2) { Player.new(decider2, :black) }
-  let(:writer)  { class_double 'ConsoleWriter', :show => nil, :show_board => nil, :flash_message= => nil }
-  let(:board)   { Board.new }
-  let(:game)    { Game.new(player1, player2, writer, board) }
+  let(:first_move)  { Move.new('e2 - e4') }
+  let(:second_move) { Move.new('e7 - e5') }
+  let(:decider1)    { double 'move decider 1', :get_move => first_move }
+  let(:decider2)    { double 'move decider 2', :get_move => second_move }
+  let(:player1)     { Player.new(decider1, :white) }
+  let(:player2)     { Player.new(decider2, :black) }
+  let(:writer)      { class_double 'ConsoleWriter', :show => nil, :show_board => nil, :flash_message= => nil }
+  let(:board)       { Board.new }
+  let(:game)        { Game.new(player1, player2, writer, board) }
 
   let(:rules)   { Rules.new(board, player1, player2) }
 
@@ -111,7 +111,7 @@ describe Game do
   it 'can show all the moves for a piece' do
     target_spaces = ['a2', 'a3']
 
-    expect(player1).to receive(:get_move).and_return 'a1 moves'
+    expect(player1).to receive(:get_move).and_return Move.new('a1 moves')
     expect(player1).to receive(:pause)
     expect_any_instance_of(Rules).to receive(:all_moves_for_space).with('a1').and_return(target_spaces)
     expect(writer).to receive(:show).with(target_spaces)

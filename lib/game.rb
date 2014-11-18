@@ -25,8 +25,8 @@ class Game
     rules = Rules.new(board, current_player, other_player)
     move = current_player.get_move(board, rules)
 
-    if move.include?('moves') # mostly for debugging
-      moves = rules.all_moves_for_space(move[0..1])
+    if move.text.include?('moves') # mostly for debugging
+      moves = rules.all_moves_for_space(move.starting_space)
       writer.show moves
       current_player.pause
     else

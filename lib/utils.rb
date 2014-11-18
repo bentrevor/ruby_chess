@@ -17,14 +17,14 @@ module Utils
     end
 
     def correctly_formatted_move?(move)
-      move.length == 7 &&
-        move[3] == '-' &&
-        on_board?(move.split.first) &&
-        on_board?(move.split.last)
+      move.text.length == 7                                &&
+        [:normal, :castle, :promotion].include?(move.type) &&
+        on_board?(move.starting_space)                     &&
+        on_board?(move.target_space)
     end
 
     def spaces_to_moves(target_spaces, starting_space)
-      target_spaces.map { |target_space| "#{starting_space} - #{target_space}" }
+      target_spaces.map { |target_space| Move.new("#{starting_space} - #{target_space}") }
     end
 
     private
