@@ -30,11 +30,11 @@ describe Board do
   end
 
   it 'raises an error if it gets the wrong format move' do
-    expect { board.move_piece('a1') }.to raise_error(ArgumentError)
+    expect { board.move_piece(Move.new('a1')) }.to raise_error(ArgumentError)
   end
 
   it 'can move a piece' do
-    board.move_piece 'a2 - a4'
+    board.move_piece(Move.new('a2 - a4'))
 
     expect(board.pieces['a2']).to be nil
     expect(board.pieces['a4']).to be_a Pawn
@@ -44,7 +44,7 @@ describe Board do
     board = Board.new({ :a1 => black_rook,
                         :a2 => white_bishop })
 
-    board.move_piece 'a1 - a2'
+    board.move_piece(Move.new('a1 - a2'))
 
     expect(board.pieces['a1']).to be nil
     expect(board.pieces['a2']).to be_a Rook
@@ -60,7 +60,7 @@ describe Board do
     board = Board.new({ :a1 => black_rook,
                         :a2 => white_bishop })
 
-    board.try_move('a1 - a2') do
+    board.try_move(Move.new('a1 - a2')) do
       expect(board.pieces['a1']).to be_nil
       expect(board.pieces['a2']).to be_a Rook
     end

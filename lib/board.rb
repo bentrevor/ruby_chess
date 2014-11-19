@@ -14,9 +14,9 @@ class Board
 
   def move_piece(move)
     raise ArgumentError unless Utils.correctly_formatted_move?(move)
-    original_space = get_space(move.split.first)
+    original_space = get_space(move.starting_space)
 
-    place_piece(original_space.piece, move.split.last)
+    place_piece(original_space.piece, move.target_space)
     original_space.piece = nil
   end
 
@@ -39,16 +39,14 @@ class Board
 
   def try_move(move)
     raise ArgumentError unless Utils.correctly_formatted_move?(move)
-    starting_space = move.split.first
-    target_space = move.split.last
-    starting_piece = pieces[starting_space]
-    target_piece = pieces[target_space]
+    starting_piece = pieces[move.starting_space]
+    target_piece = pieces[move.target_space]
 
     move_piece move
     yield
 
-    get_space(starting_space).piece = starting_piece
-    get_space(target_space).piece   = target_piece
+    get_space(move.starting_space).piece = starting_piece
+    get_space(move.target_space).piece   = target_piece
   end
 
   def move_in_direction(space, direction)

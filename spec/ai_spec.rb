@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AI do
+xdescribe AI do
   let(:black_king) { Piece.create :black, :king }
   let(:white_king) { Piece.create :white, :king }
   let(:rules)      { Rules }

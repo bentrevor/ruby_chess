@@ -1,19 +1,19 @@
 class Game
   attr_accessor :current_player, :other_player, :rules, :writer, :board
 
-  def initialize(player1, player2, rules, writer, board)
+  def initialize(player1, player2, writer, board)
     self.current_player = player1
     self.other_player   = player2
-    self.rules          = rules
     self.writer         = writer
     self.board          = board
+    self.rules          = Rules.new(board, player1, player2)
 
     player1.color = :white
     player2.color = :black
   end
 
   def start
-    until rules.game_over?(board)
+    until rules.game_over?
       next_turn
     end
 
@@ -22,19 +22,20 @@ class Game
 
   def next_turn
     writer.show_board board
+    rules = Rules.new(board, current_player, other_player)
     move = current_player.get_move(board, rules)
 
-    if move.include?('moves') # mostly for debugging
-      moves = rules.all_moves_for_space(move[0..1], board, current_player)
+    if move.text.include?('moves') # mostly for debugging
+      moves = rules.all_moves_for_space(move.starting_space)
       writer.show moves
       current_player.pause
     else
       begin
-        if rules.valid_move?(move, board, current_player)
+        if rules.valid_move?(move)
           board.move_piece(move)
           toggle_players
         end
-      rescue rules::InvalidMoveError => e
+      rescue Rules::InvalidMoveError => e
         writer.flash_message = e.message
       end
     end

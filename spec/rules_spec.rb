@@ -14,53 +14,51 @@ describe Rules do
   let(:player1) { Player.new double, :white }
   let(:player2) { Player.new double, :black }
 
-  let(:board) { Board.new({'d4' => white_rook}) }
+  let(:board) { Board.new({ 'd4' => white_rook,
+                            'c3' => black_rook }) }
+
+  let(:rules) { Rules.new(board, player1, player2) }
 
   describe '#valid_move?' do
     it 'knows when a move is valid' do
-      expect(Rules.valid_move?('d4 - d5', board, player1)).to eq true
+      expect(rules.valid_move?(Move.new('d4 - d5'))).to eq true
     end
 
     it 'is false when there is no piece in original space' do
-      expect { Rules.valid_move?('a4 - a5', board, player1) }.to raise_error(Rules::InvalidMoveError)
+      expect { rules.valid_move?(Move.new('a4 - a5')) }.to raise_error(Rules::InvalidMoveError)
     end
 
     it 'is false when it tries to move the wrong color piece' do
-      expect { Rules.valid_move?('d4 - d5', board, player2) }.to raise_error(Rules::InvalidMoveError)
+      expect { rules.valid_move?(Move.new('c3 - c4')) }.to raise_error(Rules::InvalidMoveError)
     end
 
     it 'is false when it tries to make an illegal move' do
-      expect(Rules.valid_move?('d4 - d8', board, player1)).to eq true
-      expect(Rules.valid_move?('d4 - h4', board, player1)).to eq true
-      expect { Rules.valid_move?('d4 - e5', board, player1) }.to raise_error(Rules::InvalidMoveError)
+      expect(  rules.valid_move?(Move.new('d4 - d8'))).to eq true
+      expect(  rules.valid_move?(Move.new('d4 - h4'))).to eq true
+      expect { rules.valid_move?(Move.new('d4 - e5')) }.to raise_error(Rules::InvalidMoveError)
     end
 
     it "doesn't let you move into check" do
-      board.place_piece(black_king, 'c3')
+      board.place_piece(white_king, 'b2')
 
-      %w[b4 c4 d3 d2].each do |invalid_move|
-        expect { Rules.valid_move?("c3 - #{invalid_move}", board, player2) }.to raise_error(Rules::InvalidMoveError)
+      %w[a3 b3 c2 c1].each do |invalid_move|
+        expect { rules.valid_move?(Move.new("b2 - #{invalid_move}")) }.to raise_error(Rules::InvalidMoveError)
       end
 
-      %w[b3 b2 c2 d4].each do |valid_move|
-        expect(Rules.valid_move?("c3 - #{valid_move}", board, player2)).to eq true
+      %w[a2 a1 b1 c3].each do |valid_move|
+        expect(rules.valid_move?(Move.new("b2 - #{valid_move}"))).to eq true
       end
-
-      board.place_piece(white_bishop, 'e5')
-      expect { Rules.valid_move?("c3 - d4", board, player2) }.to raise_error(Rules::InvalidMoveError)
     end
 
     it 'forces you to move out of check' do
-      board.place_piece(black_king, 'c4')
-      board.place_piece(black_rook, 'e4')
+      board.place_piece(white_king, 'c2')
 
-      expect { Rules.valid_move?('e4 - e5', board, player2) }.to raise_error(Rules::InvalidMoveError)
-      expect(Rules.valid_move?('e4 - d4', board, player2)).to eq true
+      expect { rules.valid_move?(Move.new('c2 - c1')) }.to raise_error(Rules::InvalidMoveError)
+      expect { rules.valid_move?(Move.new('d4 - e4')) }.to raise_error(Rules::InvalidMoveError)
 
-      expect { Rules.valid_move?('c4 - b4', board, player2) }.to raise_error(Rules::InvalidMoveError)
-      expect { Rules.valid_move?('c4 - d5', board, player2) }.to raise_error(Rules::InvalidMoveError)
-      expect(Rules.valid_move?('c4 - c5', board, player2)).to eq true
-      expect(Rules.valid_move?('c4 - d4', board, player2)).to eq true
+      expect(  rules.valid_move?(Move.new('c2 - b2'))).to eq true
+      expect(  rules.valid_move?(Move.new('c2 - d1'))).to eq true
+      expect(  rules.valid_move?(Move.new('c2 - c3'))).to eq true
     end
   end
 
@@ -69,47 +67,51 @@ describe Rules do
       board.place_piece(black_king, 'd8')
       board.place_piece(white_king, 'h8')
 
-      expect(Rules.in_check?(board, :white)).to be false
-      expect(Rules.in_check?(board, :black)).to be true
+      expect(Rules.new(board, player1, player2).in_check?).to be false
+      expect(Rules.new(board, player2, player1).in_check?).to be true
     end
 
     specify 'a knight can put a king in check' do
       board.place_piece(white_king, 'e8')
       board.place_piece(black_knight, 'f6')
 
-      expect(Rules.in_check?(board, :white)).to be true
+      expect(rules.in_check?).to be true
     end
 
     specify 'a pawn can put a king in check' do
       board.place_piece(white_king, 'd4')
       board.place_piece(black_pawn, 'e5')
 
-      expect(Rules.in_check?(board, :white)).to be true
+      expect(rules.in_check?).to be true
     end
   end
 
   describe '#all_moves_for_space' do
+    def moves_for(space)
+      rules.all_moves_for_space(space).map(&:text).sort
+    end
+
     it 'lists all moves for a piece' do
       board.place_piece(white_king, 'a8')
 
-      expect(Rules.all_moves_for_space('a7', board, player1)).to be_empty
-      expect(Rules.all_moves_for_space('a8', board, player1).sort).to eq ['a8 - a7', 'a8 - b7', 'a8 - b8']
+      expect(rules.all_moves_for_space('a7')).to be_empty
+      expect(moves_for('a8')).to eq ['a8 - a7', 'a8 - b7', 'a8 - b8']
     end
 
     it 'includes pawn moves' do
       board.place_piece(white_pawn, 'a2')
-      expect(Rules.all_moves_for_space('a2', board, player1).sort).to eq ['a2 - a3', 'a2 - a4']
+      expect(moves_for('a2')).to eq ['a2 - a3', 'a2 - a4']
 
       board.place_piece(black_rook, 'b3')
-      expect(Rules.all_moves_for_space('a2', board, player1).sort).to include 'a2 - b3'
+      expect(moves_for('a2')).to include 'a2 - b3'
     end
 
     it 'includes castle moves' do
       board.place_piece(white_king, 'e1')
       board.place_piece(white_rook, 'h1')
 
-      expect(Rules.all_moves_for_space('e1', board, player1).sort).not_to include 'e1 - c1'
-      expect(Rules.all_moves_for_space('e1', board, player1).sort).to include 'e1 - g1'
+      expect(moves_for('e1')).not_to include 'e1 c c1'
+      expect(moves_for('e1')).to include 'e1 c g1'
     end
   end
 
@@ -117,18 +119,15 @@ describe Rules do
     it 'lists every move a player can make' do
       board.place_piece(white_king, 'd4')
 
-      expect(Rules.all_moves_for_player(player1, board)).to include 'd4 - c5'
-      expect(Rules.all_moves_for_player(player1, board)).to include 'd4 - e3'
-      expect(Rules.all_moves_for_player(player1, board).length).to eq 8
+      expect(rules.all_moves_for_player).to include Move.new('d4 - c5')
+      expect(rules.all_moves_for_player).to include Move.new('d4 - e3')
+      expect(rules.all_moves_for_player.length).to eq 8
 
       board.place_piece(white_rook, 'a1')
 
-      expect(Rules.all_moves_for_player(player1, board)).to include 'a1 - a2'
-      expect(Rules.all_moves_for_player(player1, board)).to include 'a1 - a8'
-
-      board.place_piece(black_bishop, 'b2')
-
-      expect(Rules.all_moves_for_player(player2, board)).to include 'b2 - a1'
+      expect(rules.all_moves_for_player).to include Move.new('a1 - a2')
+      expect(rules.all_moves_for_player).to include Move.new('a1 - a8')
+      expect(rules.all_moves_for_player).to include Move.new('d4 - c3')
     end
   end
 end
