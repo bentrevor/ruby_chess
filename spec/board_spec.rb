@@ -2,9 +2,11 @@ require 'spec_helper'
 
 describe Board do
   let(:board) { Board.new }
-  let(:black_rook) { Piece.create(:black, :rook) }
+
+  let(:black_rook)   { Piece.create(:black, :rook) }
+  let(:black_queen)  { Piece.create(:black, :queen) }
+  let(:white_pawn)   { Piece.create(:white, :pawn) }
   let(:white_bishop) { Piece.create(:white, :bishop) }
-  let(:black_queen) { Piece.create(:black, :queen) }
 
 
   it 'has 64 spaces' do
@@ -88,5 +90,13 @@ describe Board do
     expect(board.move_in_direction('d4', :southwest)).to eq 'c3'
     expect(board.move_in_direction('d4', :west)).to eq 'c4'
     expect(board.move_in_direction('d4', :northwest)).to eq 'c5'
+  end
+
+  it 'can promote a pawn' do
+    board = Board.new({ :d7 => white_pawn,
+                        :e8 => black_queen })
+
+    board.move_piece(Move.new('d7 k d8'))
+    expect(board.pieces['d8']).to be_a Knight
   end
 end
