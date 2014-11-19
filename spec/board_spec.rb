@@ -5,6 +5,8 @@ describe Board do
 
   let(:black_rook)   { Piece.create(:black, :rook) }
   let(:black_queen)  { Piece.create(:black, :queen) }
+  let(:white_king)   { Piece.create(:white, :king) }
+  let(:white_rook)   { Piece.create(:white, :rook) }
   let(:white_pawn)   { Piece.create(:white, :pawn) }
   let(:white_bishop) { Piece.create(:white, :bishop) }
 
@@ -98,5 +100,15 @@ describe Board do
 
     board.move_piece(Move.new('d7 k d8'))
     expect(board.pieces['d8']).to be_a Knight
+  end
+
+  it 'can castle' do
+    board = Board.new({ :e1 => white_king,
+                        :h1 => white_rook })
+
+    board.move_piece(Move.new('e1 c g1'))
+    expect(board.pieces['g1']).to be_a King
+    expect(board.pieces['f1']).to be_a Rook
+    expect(board.pieces['h1']).to be nil
   end
 end

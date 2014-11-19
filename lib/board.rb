@@ -20,6 +20,25 @@ class Board
 
     place_piece(new_piece, move.target_space)
     original_space.piece = nil
+
+    if move.type == :castle
+      old_rook_space = {
+        'c8' => 'a8',
+        'g8' => 'h8',
+        'c1' => 'a1',
+        'g1' => 'h1'
+      }[move.target_space]
+
+      new_rook_space = {
+        'c8' => 'd8',
+        'g8' => 'f8',
+        'c1' => 'd1',
+        'g1' => 'f1'
+      }[move.target_space]
+
+      place_piece(Piece.create(new_piece.color, :rook), new_rook_space)
+      place_piece(nil, old_rook_space)
+    end
   end
 
   def maybe_pawn_promotion(move)
