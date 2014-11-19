@@ -16,8 +16,46 @@ class Board
     raise ArgumentError unless Utils.correctly_formatted_move?(move)
     original_space = get_space(move.starting_space)
 
-    place_piece(original_space.piece, move.target_space)
+    new_piece = maybe_pawn_promotion(move)
+
+    place_piece(new_piece, move.target_space)
     original_space.piece = nil
+
+    if move.type == :castle
+      old_rook_space = {
+        'c8' => 'a8',
+        'g8' => 'h8',
+        'c1' => 'a1',
+        'g1' => 'h1'
+      }[move.target_space]
+
+      new_rook_space = {
+        'c8' => 'd8',
+        'g8' => 'f8',
+        'c1' => 'd1',
+        'g1' => 'f1'
+      }[move.target_space]
+
+      place_piece(Piece.create(new_piece.color, :rook), new_rook_space)
+      place_piece(nil, old_rook_space)
+    end
+  end
+
+  def maybe_pawn_promotion(move)
+    piece = pieces[move.starting_space]
+
+    if %w[k b r q].include?(move.text[3])
+      type = {
+        'k' => :knight,
+        'b' => :bishop,
+        'r' => :rook,
+        'q' => :queen
+      }[move.text[3]]
+
+      Piece.create(piece.color, type)
+    else
+      piece
+    end
   end
 
   def place_piece(piece, space)

@@ -26,8 +26,10 @@ class Rules
     raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != player.color
 
     moves_for_space = all_moves_for_space(starting_space)
-    raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless moves_for_space.include?(move)
+    target_spaces = moves_for_space.map(&:target_space)
+    raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless target_spaces.include?(move.target_space)
     raise InvalidMoveError.new("Invalid move:\nYou're moving into check or something.") unless legal_move?(move)
+    raise InvalidMoveError.new("Invalid move:\nSpecify the promotion.") if unspecified_pawn_promotion?(move)
 
     true
   end
@@ -84,5 +86,9 @@ class Rules
     moves.map do |move|
       move.target_space
     end
+  end
+
+  def unspecified_pawn_promotion?(move)
+    board.pieces[move.starting_space].is_a?(Pawn) && move.target_space[1] =~ /[18]/ && move.text[3] == '-'
   end
 end

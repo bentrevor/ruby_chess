@@ -38,6 +38,17 @@ describe Rules do
       expect { rules.valid_move?(Move.new('d4 - e5')) }.to raise_error(Rules::InvalidMoveError)
     end
 
+    it 'raises an error when a pawn promotion is not specified' do
+      board = Board.new({ :d7 => white_pawn })
+      rules = Rules.new(board, player1, player2)
+
+      expect { rules.valid_move?(Move.new('d7 - d8')) }.to raise_error(Rules::InvalidMoveError)
+      expect(  rules.valid_move?(Move.new('d7 k d8'))).to eq true
+      expect(  rules.valid_move?(Move.new('d7 b d8'))).to eq true
+      expect(  rules.valid_move?(Move.new('d7 r d8'))).to eq true
+      expect(  rules.valid_move?(Move.new('d7 q d8'))).to eq true
+    end
+
     it "doesn't let you move into check" do
       board.place_piece(white_king, 'b2')
 
