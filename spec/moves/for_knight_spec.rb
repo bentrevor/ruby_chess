@@ -1,9 +1,6 @@
 require 'spec_helper'
 
 describe Moves::ForKnight do
-  let(:black_knight) { Piece.create :black, :knight }
-  let(:black_pawn)   { Piece.create :black, :pawn }
-  let(:white_pawn)   { Piece.create :white, :pawn }
   let(:board)        { Board.new({}) }
 
   def moves_for(space)

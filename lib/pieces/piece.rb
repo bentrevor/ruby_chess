@@ -21,4 +21,8 @@ class Piece
       Knight.new(color)
     end
   end
+
+  def ==(other)
+    color == other.color && abbrev == other.abbrev
+  end
 end

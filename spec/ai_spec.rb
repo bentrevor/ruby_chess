@@ -1,11 +1,9 @@
 require 'spec_helper'
 
 xdescribe AI do
-  let(:black_king) { Piece.create :black, :king }
-  let(:white_king) { Piece.create :white, :king }
-  let(:rules)      { Rules }
-  let(:player)     { Player.new(double('decider'), :black) }
-  let(:board)      { Board.new({'a1' => black_king, 'h2' => white_king}) }
+  let(:rules)  { Rules }
+  let(:player) { Player.new(double('decider'), :black) }
+  let(:board)  { Board.new({'a1' => black_king, 'h2' => white_king}) }
 
   let(:ai) { AI.new(BestSingleMove) }
 

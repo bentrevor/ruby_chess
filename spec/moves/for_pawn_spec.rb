@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Moves::ForPawn do
-  let(:black_rook)   { Piece.create :black, :rook }
-  let(:black_pawn)   { Piece.create :black, :pawn }
-  let(:white_rook)   { Piece.create :white, :rook }
-  let(:white_pawn)   { Piece.create :white, :pawn }
   let(:board)        { Board.new({}) }
 
   def moves_for(space)
