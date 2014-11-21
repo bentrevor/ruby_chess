@@ -61,6 +61,17 @@ describe Rules do
       expect(  rules.valid_move?(Move.new('c2 - d1'))).to eq true
       expect(  rules.valid_move?(Move.new('c2 - c3'))).to eq true
     end
+
+    it 'only promotes a pawn when it is moving to the last rank' do
+      board = Board.new({ :a7 => white_pawn,
+                          :a2 => white_pawn,
+                          :b6 => white_pawn })
+
+      rules = Rules.new(board, player1, player2)
+
+      expect(rules.valid_move?(Move.new('a7 k a8'))).to be true
+      expect { rules.valid_move?(Move.new('b6 k b7')) }.to raise_error(Rules::InvalidMoveError)
+    end
   end
 
   describe '#in_check?' do

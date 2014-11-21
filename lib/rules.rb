@@ -30,6 +30,7 @@ class Rules
     raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless target_spaces.include?(move.target_space)
     raise InvalidMoveError.new("Invalid move:\nYou're moving into check or something.") unless legal_move?(move)
     raise InvalidMoveError.new("Invalid move:\nSpecify the promotion.") if unspecified_pawn_promotion?(move)
+    raise InvalidMoveError.new("Invalid move:\nYou can't promote a pawn there.") unless valid_pawn_promotion_target?(move)
 
     true
   end
@@ -96,5 +97,12 @@ class Rules
 
   def unspecified_pawn_promotion?(move)
     board.pieces[move.starting_space].is_a?(Pawn) && move.target_space[1] =~ /[18]/ && move.text[3] == '-'
+  end
+
+  def valid_pawn_promotion_target?(move)
+    return true if move.type != :promotion
+
+    target_file = move.target_space[1]
+    target_file.to_s =~ /[18]/
   end
 end
