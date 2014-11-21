@@ -129,16 +129,34 @@ describe Rules do
   describe '#all_moves_for_player' do
     it 'lists every move a player can make' do
       board.place_piece(white_king, 'd4')
+      moves = rules.all_moves_for_player.map(&:text).sort
 
-      expect(rules.all_moves_for_player).to include Move.new('d4 - c5')
-      expect(rules.all_moves_for_player).to include Move.new('d4 - e3')
-      expect(rules.all_moves_for_player.length).to eq 8
+      expect(moves).not_to include 'd4 - c5'
+      expect(moves).not_to include 'd4 - c4'
+      expect(moves).not_to include 'd4 - d3'
+      expect(moves).not_to include 'd4 - e3'
+      expect(moves).to include 'd4 - c3'
+      expect(moves).to include 'd4 - d5'
+      expect(moves).to include 'd4 - e4'
 
       board.place_piece(white_rook, 'a1')
+      moves = rules.all_moves_for_player.map(&:text).sort
 
-      expect(rules.all_moves_for_player).to include Move.new('a1 - a2')
-      expect(rules.all_moves_for_player).to include Move.new('a1 - a8')
-      expect(rules.all_moves_for_player).to include Move.new('d4 - c3')
+      expect(moves).to include 'a1 - a2'
+      expect(moves).to include 'a1 - a8'
+    end
+  end
+
+  describe 'game_over' do
+    let(:game_over_board) { Board.new({ 'a1' => black_rook,
+                                        'a2' => black_rook,
+                                        'h1' => white_king }) }
+
+    let(:game_over_rules) { Rules.new(game_over_board, player1, player2) }
+
+    it 'knows when the game is over' do
+      expect(rules.game_over?).to be false
+      expect(game_over_rules.game_over?).to be true
     end
   end
 end
