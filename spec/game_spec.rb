@@ -114,7 +114,6 @@ describe Game do
     expect(player1).to receive(:get_move).and_return Move.new('a1 moves')
     expect(player1).to receive(:pause)
     expect_any_instance_of(Rules).to receive(:all_moves_for_space).with('a1').and_return(target_spaces)
-    expect(writer).to receive(:show).with(target_spaces)
 
     game.next_turn
   end

@@ -10,15 +10,15 @@ describe Player do
 
     expect(input).to receive :get_move
 
-    player.get_move(board, rules)
+    player.get_move(rules)
   end
 
   specify 'computer players use ai to decide a move' do
     ai = instance_double 'AI'
     player = Player.new ai, :white
 
-    expect(ai).to receive(:get_move).with(board, rules, player)
+    expect(ai).to receive(:get_move)
 
-    player.get_move(board, rules)
+    player.get_move(rules)
   end
 end
