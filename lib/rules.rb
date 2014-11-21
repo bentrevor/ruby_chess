@@ -27,8 +27,9 @@ class Rules
 
     moves_for_space = all_moves_for_space(starting_space)
     target_spaces = moves_for_space.map(&:target_space)
+
     raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless target_spaces.include?(move.target_space)
-    raise InvalidMoveError.new("Invalid move:\nYou're moving into check or something.") unless legal_move?(move)
+    raise InvalidMoveError.new("Invalid move:\nYou're moving into check or something.") if moving_into_check?(move)
     raise InvalidMoveError.new("Invalid move:\nSpecify the promotion.") if unspecified_pawn_promotion?(move)
     raise InvalidMoveError.new("Invalid move:\nYou can't promote a pawn there.") unless valid_pawn_promotion_target?(move)
 
@@ -54,16 +55,16 @@ class Rules
   end
 
   def all_moves_for_player
-    all_moves_for_color(player.color).select { |move| legal_move?(move) }
+    all_moves_for_color(player.color).select { |move| !moving_into_check?(move) }
   end
 
   private
 
-  def legal_move?(move)
-    valid_move = true
+  def moving_into_check?(move)
+    valid_move = false
 
     board.try_move(move) do
-      valid_move = false if in_check?
+      valid_move = true if in_check?
     end
 
     valid_move
