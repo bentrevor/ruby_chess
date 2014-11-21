@@ -27,7 +27,7 @@ class Game
 
     if move.text.include?('moves') # mostly for debugging
       moves = rules.all_moves_for_space(move.starting_space)
-      moves.each { |move| writer.show move }
+      moves.each { |move| writer.show move.text }
       current_player.pause
     else
       begin

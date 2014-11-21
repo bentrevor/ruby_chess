@@ -14,5 +14,7 @@ else
   p2 = Player.new Human, :black
 end
 
-game = Game.new p1, p2, ConsoleWriter, Board.new('e1' => white_king)
+game = Game.new p1, p2, ConsoleWriter, Board.new('e1' => Piece.create(:white, :king),
+                                                 'h1' => Piece.create(:white, :rook),
+                                                 'a8' => Piece.create(:black, :rook) )
 game.start

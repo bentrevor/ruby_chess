@@ -17,23 +17,7 @@ class Rules
   end
 
   def valid_move?(move)
-    raise InvalidMoveError.new("Invalid input:\nEnter a move like 'a2 - a4'.") unless Utils.correctly_formatted_move?(move)
-
-    starting_space = move.starting_space
-    piece = board.get_space(starting_space).piece
-
-    raise InvalidMoveError.new("Invalid move:\nThere is no piece at #{starting_space}.") if piece.nil?
-    raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != player.color
-
-    moves_for_space = all_moves_for_space(starting_space)
-    target_spaces = moves_for_space.map(&:target_space)
-
-    raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless target_spaces.include?(move.target_space)
-    raise InvalidMoveError.new("Invalid move:\nYou're moving into check or something.") if moving_into_check?(move)
-    raise InvalidMoveError.new("Invalid move:\nSpecify the promotion.") if unspecified_pawn_promotion?(move)
-    raise InvalidMoveError.new("Invalid move:\nYou can't promote a pawn there.") unless valid_pawn_promotion_target?(move)
-
-    true
+    ValidateMove.call(move, self)
   end
 
   def game_over?
@@ -57,8 +41,6 @@ class Rules
   def all_moves_for_player
     all_moves_for_color(player.color).select { |move| !moving_into_check?(move) }
   end
-
-  private
 
   def moving_into_check?(move)
     valid_move = false
@@ -98,12 +80,5 @@ class Rules
 
   def unspecified_pawn_promotion?(move)
     board.pieces[move.starting_space].is_a?(Pawn) && move.target_space[1] =~ /[18]/ && move.text[3] == '-'
-  end
-
-  def valid_pawn_promotion_target?(move)
-    return true if move.type != :promotion
-
-    target_file = move.target_space[1]
-    target_file.to_s =~ /[18]/
   end
 end
