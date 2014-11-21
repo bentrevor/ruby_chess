@@ -1,0 +1,2 @@
+class BestSingleMove
+end

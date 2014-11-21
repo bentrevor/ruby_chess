@@ -52,11 +52,11 @@ class Rules
     Moves.for(space, self)
   end
 
-  private
-
   def all_moves_for_player
     all_moves_for_color(player.color).select { |move| legal_move?(move) }
   end
+
+  private
 
   def legal_move?(move)
     valid_move = true
