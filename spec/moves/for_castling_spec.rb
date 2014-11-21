@@ -1,16 +1,6 @@
 require 'spec_helper'
 
 describe Moves::ForCastling do
-  let(:black_bishop) { Piece.create :black, :bishop }
-  let(:black_king)   { Piece.create :black, :king }
-  let(:black_knight) { Piece.create :black, :knight }
-  let(:black_pawn)   { Piece.create :black, :pawn }
-  let(:black_rook)   { Piece.create :black, :rook }
-  let(:white_bishop) { Piece.create :white, :bishop }
-  let(:white_king)   { Piece.create :white, :king }
-  let(:white_pawn)   { Piece.create :white, :pawn }
-  let(:white_rook)   { Piece.create :white, :rook }
-
   let(:board) { Board.new({ 'a1' => white_rook,
                             'h1' => white_rook,
                             'e1' => white_king,

@@ -1,16 +1,6 @@
 require 'spec_helper'
 
 describe Rules do
-  let(:black_bishop) { Piece.create :black, :bishop }
-  let(:black_king)   { Piece.create :black, :king }
-  let(:black_knight) { Piece.create :black, :knight }
-  let(:black_pawn)   { Piece.create :black, :pawn }
-  let(:black_rook)   { Piece.create :black, :rook }
-  let(:white_bishop) { Piece.create :white, :bishop }
-  let(:white_king)   { Piece.create :white, :king }
-  let(:white_pawn)   { Piece.create :white, :pawn }
-  let(:white_rook)   { Piece.create :white, :rook }
-
   let(:player1) { Player.new double, :white }
   let(:player2) { Player.new double, :black }
 
@@ -126,27 +116,6 @@ describe Rules do
     end
   end
 
-  describe '#all_moves_for_player' do
-    it 'lists every move a player can make' do
-      board.place_piece(white_king, 'd4')
-      moves = rules.all_moves_for_player.map(&:text).sort
-
-      expect(moves).not_to include 'd4 - c5'
-      expect(moves).not_to include 'd4 - c4'
-      expect(moves).not_to include 'd4 - d3'
-      expect(moves).not_to include 'd4 - e3'
-      expect(moves).to include 'd4 - c3'
-      expect(moves).to include 'd4 - d5'
-      expect(moves).to include 'd4 - e4'
-
-      board.place_piece(white_rook, 'a1')
-      moves = rules.all_moves_for_player.map(&:text).sort
-
-      expect(moves).to include 'a1 - a2'
-      expect(moves).to include 'a1 - a8'
-    end
-  end
-
   describe 'game_over' do
     let(:game_over_board) { Board.new({ 'a1' => black_rook,
                                         'a2' => black_rook,
@@ -157,6 +126,11 @@ describe Rules do
     it 'knows when the game is over' do
       expect(rules.game_over?).to be false
       expect(game_over_rules.game_over?).to be true
+    end
+
+    it 'knows the winner' do
+      expect(rules.winner).to be nil
+      expect(game_over_rules.winner).to be player2
     end
   end
 end

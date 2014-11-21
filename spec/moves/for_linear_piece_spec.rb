@@ -1,15 +1,6 @@
 require 'spec_helper'
 
 describe Moves::ForLinearPiece do
-  let(:black_king)   { Piece.create :black, :king }
-  let(:black_queen)  { Piece.create :black, :queen }
-  let(:black_knight) { Piece.create :black, :knight }
-  let(:black_pawn)   { Piece.create :black, :pawn }
-  let(:white_bishop) { Piece.create :white, :bishop }
-  let(:white_king)   { Piece.create :white, :king }
-  let(:white_pawn)   { Piece.create :white, :pawn }
-  let(:white_rook)   { Piece.create :white, :rook }
-
   let(:board) { Board.new({'d4' => white_rook}) }
 
   def moves_for(space)

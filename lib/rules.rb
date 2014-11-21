@@ -38,8 +38,8 @@ class Rules
     all_moves_for_player.empty?
   end
 
-  def all_moves_for_player
-    all_moves_for_color(player.color).select { |move| legal_move?(move) }
+  def winner
+    other_player if game_over?
   end
 
   def in_check?
@@ -50,6 +50,12 @@ class Rules
 
   def all_moves_for_space(space)
     Moves.for(space, self)
+  end
+
+  private
+
+  def all_moves_for_player
+    all_moves_for_color(player.color).select { |move| legal_move?(move) }
   end
 
   def legal_move?(move)

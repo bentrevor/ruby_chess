@@ -44,4 +44,11 @@ describe Piece do
     expect(pawn.limit(6)).to eq 1
     expect(queen.limit(8)).to eq 7
   end
+
+  it 'is equatable' do
+    rook1 = Piece.create(:black, :rook)
+    rook2 = Piece.create(:black, :rook)
+
+    expect(rook1).to eq rook2
+  end
 end

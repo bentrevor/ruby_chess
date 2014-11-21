@@ -3,14 +3,6 @@ require 'spec_helper'
 describe Board do
   let(:board) { Board.new }
 
-  let(:black_rook)   { Piece.create(:black, :rook) }
-  let(:black_queen)  { Piece.create(:black, :queen) }
-  let(:white_king)   { Piece.create(:white, :king) }
-  let(:white_rook)   { Piece.create(:white, :rook) }
-  let(:white_pawn)   { Piece.create(:white, :pawn) }
-  let(:white_bishop) { Piece.create(:white, :bishop) }
-
-
   it 'has 64 spaces' do
     expect(board.spaces.length).to eq 64
   end
@@ -55,9 +47,10 @@ describe Board do
   end
 
   it 'can place a piece' do
-    board.place_piece(black_queen, 'd4')
+    queen = black_queen
+    board.place_piece(queen, 'd4')
 
-    expect(board.pieces['d4']).to be black_queen
+    expect(board.pieces['d4']).to be queen
   end
 
   it 'can try/undo a move' do
@@ -78,9 +71,9 @@ describe Board do
                         :b1 => white_bishop,
                         :h3 => black_queen })
 
-    expect(board.pieces['a1']).to be black_rook
-    expect(board.pieces['b1']).to be white_bishop
-    expect(board.pieces['h3']).to be black_queen
+    expect(board.pieces['a1']).to eq black_rook
+    expect(board.pieces['b1']).to eq white_bishop
+    expect(board.pieces['h3']).to eq black_queen
   end
 
   it 'can move in a direction' do
