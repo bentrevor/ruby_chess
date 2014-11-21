@@ -5,7 +5,7 @@ class AI
     self.strategy = strategy
   end
 
-  def get_move(board, rules, player)
-    strategy.get_move(board, rules, player)
+  def get_move(rules)
+    strategy.get_move(rules)
   end
 end

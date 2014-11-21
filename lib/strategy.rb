@@ -1,7 +1,7 @@
 class Strategy
   class << self
     def score_board(board, rules, player)
-      winner = rules.winner(board)
+      winner = rules.winner
 
       if winner
         return (winner == player.color) ? 10000 : -10000

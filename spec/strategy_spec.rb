@@ -3,9 +3,10 @@ require 'spec_helper'
 xdescribe Strategy do
   let(:strategy) { described_class }
   let(:board) { Board.new({}) }
-  let(:rules) { Rules }
   let(:player1) { Player.new(double('ai'), :white) }
   let(:player2) { Player.new(double('ai'), :black) }
+
+  let(:rules) { Rules.new(board, player1, player2) }
 
   context 'scoring pieces' do
     {

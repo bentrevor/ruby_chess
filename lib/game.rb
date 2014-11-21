@@ -23,7 +23,7 @@ class Game
   def next_turn
     writer.show_board board
     rules = Rules.new(board, current_player, other_player)
-    move = current_player.get_move(board, rules)
+    move = current_player.get_move(rules)
 
     if move.text.include?('moves') # mostly for debugging
       moves = rules.all_moves_for_space(move.starting_space)
