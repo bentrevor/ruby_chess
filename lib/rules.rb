@@ -17,21 +17,7 @@ class Rules
   end
 
   def valid_move?(move)
-    raise InvalidMoveError.new("Invalid input:\nEnter a move like 'a2 - a4'.") unless Utils.correctly_formatted_move?(move)
-
-    starting_space = move.starting_space
-    piece = board.get_space(starting_space).piece
-
-    raise InvalidMoveError.new("Invalid move:\nThere is no piece at #{starting_space}.") if piece.nil?
-    raise InvalidMoveError.new("Invalid move:\nWrong color.") if piece.color != player.color
-
-    moves_for_space = all_moves_for_space(starting_space)
-    target_spaces = moves_for_space.map(&:target_space)
-    raise InvalidMoveError.new("Invalid move:\nYou can't move there.") unless target_spaces.include?(move.target_space)
-    raise InvalidMoveError.new("Invalid move:\nYou're moving into check or something.") unless legal_move?(move)
-    raise InvalidMoveError.new("Invalid move:\nSpecify the promotion.") if unspecified_pawn_promotion?(move)
-
-    true
+    ValidateMove.call(move, self)
   end
 
   def game_over?
@@ -53,16 +39,14 @@ class Rules
   end
 
   def all_moves_for_player
-    all_moves_for_color(player.color).select { |move| legal_move?(move) }
+    all_moves_for_color(player.color).select { |move| !moving_into_check?(move) }
   end
 
-  private
-
-  def legal_move?(move)
-    valid_move = true
+  def moving_into_check?(move)
+    valid_move = false
 
     board.try_move(move) do
-      valid_move = false if in_check?
+      valid_move = true if in_check?
     end
 
     valid_move

@@ -109,11 +109,9 @@ describe Game do
   end
 
   it 'can show all the moves for a piece' do
-    target_spaces = ['a2', 'a3']
-
     expect(player1).to receive(:get_move).and_return Move.new('a1 moves')
     expect(player1).to receive(:pause)
-    expect_any_instance_of(Rules).to receive(:all_moves_for_space).with('a1').and_return(target_spaces)
+    expect_any_instance_of(Rules).to receive(:all_moves_for_space).with('a1').and_call_original
 
     game.next_turn
   end
