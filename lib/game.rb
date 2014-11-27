@@ -17,10 +17,12 @@ class Game
       next_turn
     end
 
+    writer.show_board board
     show_winner_dialogue(board)
   end
 
   def next_turn
+    # $stdin.gets
     writer.show_board board
     rules = Rules.new(board, current_player, other_player)
     move = current_player.get_move(rules)
@@ -48,8 +50,8 @@ class Game
   end
 
   def show_winner_dialogue(board)
-    if rules.winner(board)
-      writer.show "#{rules.winner.capitalize} wins."
+    if rules.winner
+      writer.show "#{rules.winner.color.capitalize} wins."
     else
       writer.show 'Tie game.'
     end

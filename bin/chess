@@ -6,7 +6,7 @@ Dir["./lib/**/*.rb"].each do |file|
 end
 
 p1 = Player.new Human, :white
-ai = RandomMove
+ai = BestSingleMove
 
 if ARGV.include?('ai')
   p2 = Player.new ai, :black
@@ -14,7 +14,10 @@ else
   p2 = Player.new Human, :black
 end
 
-game = Game.new p1, p2, ConsoleWriter, Board.new('e1' => Piece.create(:white, :king),
-                                                 'h1' => Piece.create(:white, :rook),
-                                                 'a8' => Piece.create(:black, :rook) )
+board = Board.new
+
+# board.place_piece(nil, 'd8')
+
+
+game = Game.new p1, p2, ConsoleWriter, board
 game.start

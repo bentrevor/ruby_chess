@@ -18,13 +18,29 @@ class BestSingleMove
       end
     end
 
+    begin
     Move.new(best_move_from(scores))
+      rescue
+      binding.pry
+      end
   end
 
   def best_move_from(scores)
     best_score = scores.values.min
 
-    scores.select { |_, score| score == best_score }.keys.sample
+    best_move = scores.select { |_, score| score == best_score }.keys.sample
+
+    if pawn_promotion?(best_move)
+      best_move.gsub('-', 'q')
+    else
+      best_move
+    end
+  end
+
+  def pawn_promotion?(move)
+    move &&
+    rules.board.pieces[move[0..1]].is_a?(Pawn) &&
+      move[-1] =~ /[18]/
   end
 
   def score_board(board)
