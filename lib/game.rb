@@ -51,7 +51,7 @@ class Game
 
   def show_winner_dialogue(board)
     if rules.winner
-      writer.show "#{rules.winner.color.capitalize} wins."
+      writer.show "#{rules.winner.capitalize} wins."
     else
       writer.show 'Tie game.'
     end
