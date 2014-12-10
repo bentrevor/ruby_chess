@@ -115,4 +115,16 @@ describe Game do
 
     game.next_turn
   end
+
+  describe '#export_as_fen' do
+    it 'has all the pieces' do
+      fen = game.export_as_fen
+
+      expect(fen).to include 'rnbqkbnr'
+      expect(fen).to include 'pppppppp'
+      expect(fen).to include '/8/8/8/8/'
+      expect(fen).to include 'RNBQKBNR'
+      expect(fen).to include 'PPPPPPPP'
+    end
+  end
 end
