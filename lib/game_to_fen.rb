@@ -39,8 +39,43 @@ class GameToFen
 
       FenStruct.new({
                       rows_of_pieces: rows_of_pieces,
-                      active_color: game.current_player.color[0]
+                      active_color: game.current_player.color[0],
+                      castling_availability: castling_availability_for(game)
                     })
+    end
+
+    def castling_availability_for(game)
+      availability = ''
+
+      white_player = white_player_in(game)
+      black_player = black_player_in(game)
+
+      availability << 'K' if white_player.can_castle_right
+      availability << 'Q' if white_player.can_castle_left
+      availability << 'k' if black_player.can_castle_right
+      availability << 'q' if black_player.can_castle_left
+
+      if availability.empty?
+        '-'
+      else
+        availability
+      end
+    end
+
+    def black_player_in(game)
+      if game.current_player.color == :black
+        game.current_player
+      else
+        game.other_player
+      end
+    end
+
+    def white_player_in(game)
+      if game.current_player.color == :white
+        game.current_player
+      else
+        game.other_player
+      end
     end
 
     def squish_empty_spaces(spaces)

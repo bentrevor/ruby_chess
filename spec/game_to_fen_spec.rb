@@ -31,4 +31,18 @@ describe GameToFen do
 
     expect(next_turn_fen_struct.active_color).to eq 'b'
   end
+
+  it 'knows the castling availability' do
+    expect(new_game_fen_struct.castling_availability).to eq 'KQkq'
+
+    player1.can_castle_left  = false
+    player2.can_castle_right = false
+
+    expect(described_class.build_fen_struct(game).castling_availability).to eq 'Kq'
+
+    player1.can_castle_right = false
+    player2.can_castle_left  = false
+
+    expect(described_class.build_fen_struct(game).castling_availability).to eq '-'
+  end
 end
