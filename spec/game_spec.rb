@@ -53,6 +53,26 @@ describe Game do
     game.next_turn
   end
 
+  it 'remembers the last move made' do
+    expect(game.last_move).to be nil
+
+    game.next_turn
+    expect(game.last_move).to be first_move
+
+    game.next_turn
+    expect(game.last_move).to be second_move
+  end
+
+  it 'remembers how many full moves have been made' do
+    expect(game.number_of_moves).to be 1
+
+    game.next_turn
+    expect(game.number_of_moves).to be 1
+
+    game.next_turn
+    expect(game.number_of_moves).to be 2
+  end
+
   it 'shows an invalid move message when a move is invalid' do
     expect_any_instance_of(Rules).to receive(:valid_move?).and_raise(Rules::InvalidMoveError.new('msg'))
     expect(writer).to receive(:flash_message=).with 'msg'

@@ -1,12 +1,13 @@
 class Game
-  attr_accessor :current_player, :other_player, :rules, :writer, :board
+  attr_accessor :current_player, :other_player, :rules, :writer, :board, :last_move, :number_of_moves
 
   def initialize(player1, player2, writer, board)
-    self.current_player = player1
-    self.other_player   = player2
-    self.writer         = writer
-    self.board          = board
-    self.rules          = Rules.new(board, player1, player2)
+    self.current_player  = player1
+    self.other_player    = player2
+    self.writer          = writer
+    self.board           = board
+    self.rules           = Rules.new(board, player1, player2)
+    self.number_of_moves = 1
 
     player1.color = :white
     player2.color = :black
@@ -35,6 +36,8 @@ class Game
       begin
         if rules.valid_move?(move)
           board.move_piece(move)
+          self.last_move = move
+          self.number_of_moves += 1 if current_player.color == :black
           toggle_players
         end
       rescue Rules::InvalidMoveError => e
@@ -42,6 +45,11 @@ class Game
       end
     end
   end
+
+  def export_as_fen
+    GameToFen.call(self)
+  end
+
 
   private
 
