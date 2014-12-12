@@ -13,6 +13,10 @@ describe GameToFen do
 
   let(:new_game_fen_struct) { described_class.build_fen_struct(game) }
 
+  def fen_struct
+    described_class.build_fen_struct(game)
+  end
+
   it 'has all the pieces' do
     rows = new_game_fen_struct.rows_of_pieces
 
@@ -38,17 +42,32 @@ describe GameToFen do
     player1.can_castle_left  = false
     player2.can_castle_right = false
 
-    expect(described_class.build_fen_struct(game).castling_availability).to eq 'Kq'
+    expect(fen_struct.castling_availability).to eq 'Kq'
 
     player1.can_castle_right = false
     player2.can_castle_left  = false
 
-    expect(described_class.build_fen_struct(game).castling_availability).to eq '-'
+    expect(fen_struct.castling_availability).to eq '-'
   end
 
   it 'knows the en passant capture space' do
-    expect(described_class.build_fen_struct(game).en_passant_target_space).to eq '-'
+    expect(fen_struct.en_passant_target_space).to eq '-'
     game.next_turn
-    expect(described_class.build_fen_struct(game).en_passant_target_space).to eq 'e3'
+    expect(fen_struct.en_passant_target_space).to eq 'e3'
+  end
+
+  it 'stubs the halfmove_clock' do
+    # complete implementation of chess rules is out of the scope of this project :)
+    expect(fen_struct.halfmove_clock).to eq '0'
+  end
+
+  it 'knows how many moves have been made' do
+    expect(fen_struct.fullmove_number).to eq '1'
+
+    game.next_turn
+    expect(fen_struct.fullmove_number).to eq '1'
+
+    game.next_turn
+    expect(fen_struct.fullmove_number).to eq '2'
   end
 end

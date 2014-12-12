@@ -41,7 +41,9 @@ class GameToFen
                       rows_of_pieces: rows_of_pieces,
                       active_color: game.current_player.color[0],
                       castling_availability: castling_availability_for(game),
-                      en_passant_target_space: en_passant_target_space_for_game(game)
+                      en_passant_target_space: en_passant_target_space_for_game(game),
+                      halfmove_clock: '0',
+                      fullmove_number: game.number_of_moves.to_s
                     })
     end
 
