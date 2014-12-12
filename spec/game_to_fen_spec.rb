@@ -11,7 +11,7 @@ describe GameToFen do
   let(:board)       { Board.new }
   let(:game)        { Game.new(player1, player2, writer, board) }
 
-  let(:new_game_fen_struct) { described_class.call(game) }
+  let(:new_game_fen_struct) { described_class.build_fen_struct(game) }
 
   it 'has all the pieces' do
     rows = new_game_fen_struct.rows_of_pieces
@@ -24,11 +24,11 @@ describe GameToFen do
   end
 
   it 'knows the current player' do
-    expect(new_game_fen_struct.current_player).to eq 'w'
+    expect(new_game_fen_struct.active_color).to eq 'w'
 
-    game.next_move
-    next_turn_fen_struct = described_class.call(game)
+    game.next_turn
+    next_turn_fen_struct = described_class.build_fen_struct(game)
 
-    expect(new_game_fen_struct.current_player).to eq 'b'
+    expect(next_turn_fen_struct.active_color).to eq 'b'
   end
 end
