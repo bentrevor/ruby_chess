@@ -40,8 +40,38 @@ class GameToFen
       FenStruct.new({
                       rows_of_pieces: rows_of_pieces,
                       active_color: game.current_player.color[0],
-                      castling_availability: castling_availability_for(game)
+                      castling_availability: castling_availability_for(game),
+                      en_passant_target_space: en_passant_target_space_for_game(game)
                     })
+    end
+
+    def en_passant_target_space_for_game(game)
+      last_move = game.last_move
+      return '-' unless last_move
+
+      if moved_pawn_two_spaces?(game)
+        en_passant_target_space_for_move(last_move)
+      else
+        '-'
+      end
+    end
+
+    def en_passant_target_space_for_move(move)
+      next_rank = if move.starting_space[1] == '2'
+                    '3'
+                  else
+                    '6'
+                  end
+
+      move.starting_space[0] + next_rank
+    end
+
+    def moved_pawn_two_spaces?(game)
+      move = game.last_move
+      moved_piece = game.board.pieces[move.target_space]
+      spaces_moved = (move.starting_space[1].to_i - move.target_space[1].to_i).abs
+
+      moved_piece.is_a?(Pawn) && spaces_moved == 2
     end
 
     def castling_availability_for(game)

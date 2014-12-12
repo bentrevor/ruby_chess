@@ -1,5 +1,5 @@
 class Game
-  attr_accessor :current_player, :other_player, :rules, :writer, :board
+  attr_accessor :current_player, :other_player, :rules, :writer, :board, :last_move
 
   def initialize(player1, player2, writer, board)
     self.current_player = player1
@@ -35,6 +35,7 @@ class Game
       begin
         if rules.valid_move?(move)
           board.move_piece(move)
+          self.last_move = move
           toggle_players
         end
       rescue Rules::InvalidMoveError => e

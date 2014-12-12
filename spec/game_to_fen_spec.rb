@@ -45,4 +45,10 @@ describe GameToFen do
 
     expect(described_class.build_fen_struct(game).castling_availability).to eq '-'
   end
+
+  it 'knows the en passant capture space' do
+    expect(described_class.build_fen_struct(game).en_passant_target_space).to eq '-'
+    game.next_turn
+    expect(described_class.build_fen_struct(game).en_passant_target_space).to eq 'e3'
+  end
 end
